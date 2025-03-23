@@ -1,0 +1,12 @@
+__pycache__/
+
+.ipynb_checkpoints
+*.ipynb
+profile_default/
+ipython_config.py
+*.log
+.env
+.venv
+.DS_Store
+node_modules
+package-lock.json

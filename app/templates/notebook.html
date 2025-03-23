@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Notebook - {{ filename }}{% endblock %}
+{% block head %}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/notebook.css') }}" />
+{% endblock %}
+{% block content %}
+    <h1>
+        Notebook: <span id="filename">{{ filename }}</span>
+    </h1>
+    <div>
+        <button id="save-btn" class="btn">Save</button>
+        <button id="add-cell-btn" class="btn">Add Cell</button>
+        <button id="run-all-btn" class="btn">Run All</button>
+        <a href="/">Back to Files</a>
+    </div>
+    <div id="notebook-container"></div>
+{% endblock %}
+{% block scripts %}
+    <script>const filename = "{{ filename }}";</script>
+    <script src="{{ url_for('static', filename='js/notebook.js') }}"></script>
+{% endblock %}

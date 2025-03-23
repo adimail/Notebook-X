@@ -1,0 +1,40 @@
+.container {
+    text-align: center;
+    margin: auto;
+    padding: 20px;
+    max-width: 600px;
+}
+
+.error-code {
+    font-size: 80px;
+    font-weight: bold;
+    color: #dc3545;
+}
+
+.error-message {
+    font-size: 24px;
+    font-weight: bold;
+    color: #343a40;
+    margin-bottom: 10px;
+}
+
+.container p {
+    font-size: 18px;
+    color: #6c757d;
+}
+
+.back-home {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 18px;
+    color: white;
+    background: #007bff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: 0.3s ease-in-out;
+}
+
+.back-home:hover {
+    background: #0056b3;
+}

@@ -1,0 +1,112 @@
+/* auth.css */
+.auth-container {
+    max-width: 400px;
+    margin: auto;
+    text-align: center;
+}
+
+.auth-container h2 {
+    font-size: 24px;
+    color: #343a40;
+    margin-bottom: 20px;
+}
+
+.auth-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-container input,
+.auth-container select {
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 16px;
+    background: white;
+    appearance: none;
+    cursor: pointer;
+}
+
+.auth-container select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='%23343a40'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 35px;
+}
+
+.auth-container select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.auth-container .button {
+    background: #007bff;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    border: none;
+    padding: 10px;
+}
+
+.auth-container .button:hover {
+    background: #0056b3;
+}
+
+.auth-link {
+    margin-top: 15px;
+}
+
+.auth-link a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.auth-link a:hover {
+    text-decoration: underline;
+}
+
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007bff;
+    margin-bottom: 10px;
+}
+
+/* Logout Button */
+.logout-button {
+    background: #dc3545;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.logout-button:hover {
+    background: #c82333;
+}
+
+img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: 40px 0;
+}

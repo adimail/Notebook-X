@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>
+            {% block title %}Jupiter Notebook Clone{% endblock %}
+        </title>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <link rel="stylesheet"
+              href="{{ url_for('static', filename='css/index.css') }}" />
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div id="flash-message-container">
+                    {% for category, message in messages %}<div class="flash-message {{ category }}">{{ message }}</div>{% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <div class="wrapper">
+            <nav class="navbar">
+                <h1>
+                    <a href="/" style="color: white; text-decoration: none">Jupiter Notebook Clone</a>
+                </h1>
+            </nav>
+            <main class="content">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+        {% block scripts %}
+        {% endblock %}
+    </body>
+</html>
