@@ -1,0 +1,31 @@
+{
+  "name": "frontend",
+  "version": "0.0.1",
+  "description": "jupyter notebook clone",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --watch",
+    "dev": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adimail/Notebook-X.git"
+  },
+  "author": "Aditya Godse",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adimail/Notebook-X/issues"
+  },
+  "homepage": "https://github.com/adimail/Notebook-X#readme",
+  "devDependencies": {
+    "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.2",
+    "mini-css-extract-plugin": "^2.9.2",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.2",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
+  }
+}

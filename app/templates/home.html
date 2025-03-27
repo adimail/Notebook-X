@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-{% block title %}Jupiter Notebook Clone{% endblock %}
-{% block content %}
-    <h1>File Browser</h1>
-    <div id="current-path">.</div>
-    <div id="file-list"></div>
-{% endblock %}
-{% block scripts %}<script src="{{ url_for('static', filename='js/main.js') }}"></script>{% endblock %}

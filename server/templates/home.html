@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block toolbar %}
+    {% include "toolbar.html" %}
+{% end %}
+{% block content %}
+    <p>Path: {{ current_path }}</p>
+    <div id="directory-container"></div>
+{% end %}
