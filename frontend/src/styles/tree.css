@@ -1,8 +1,7 @@
 .directory-listing {
-  padding: var(--container-padding);
   background-color: var(--bg-color);
-  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
+  overflow-x: auto;
 }
 
 .up-link {
@@ -15,12 +14,28 @@
   border-radius: var(--border-radius);
 }
 
+.directory-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.directory-table th,
+.directory-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.directory-table th {
+  background-color: var(--table-header-bg);
+  font-weight: bold;
+}
+
 .dir-link,
-.file-link,
-.notebook-link {
-  display: block;
+.file-link {
   text-decoration: none;
-  border-radius: var(--border-radius);
+  font-weight: bold;
 }
 
 .dir-link {
@@ -29,8 +44,4 @@
 
 .file-link {
   color: var(--file-color);
-}
-
-.notebook-link {
-  color: var(--notebook-color);
 }

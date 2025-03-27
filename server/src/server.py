@@ -11,6 +11,7 @@ from server.src.handlers.file_handler import (
 )
 from server.src.handlers.websocket_handler import WebSocketHandler
 from server.src.handlers.kernel_handler import KernelHandler
+from server.src.handlers.packages_handler import PackagesHandler
 
 
 def make_app():
@@ -30,6 +31,8 @@ def make_app():
             (r"/get-dir-listing", GetDirListingHandler, dict(base_dir=base_dir)),
             (r"/api/content", APIContentHandler, dict(base_dir=base_dir)),
             (r"/api/files", APIFilesHandler, dict(base_dir=base_dir)),
+            (r"/api/packages", PackagesHandler),
+            (r"/packages", PackagesHandler),
             (r"/ws", WebSocketHandler),
             (r"/kernel", KernelHandler),
             (

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block toolbar %}
+    {% include "toolbar.html" %}
+{% end %}
+{% block content %}
+    <h2>Installed Packages</h2>
+    <table id="packages-table">
+        <thead>
+            <tr>
+                <th>Package Name</th>
+                <th>Version</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for package in packages %}
+                <tr>
+                    <td>{{ package["name"] }}</td>
+                    <td>{{ package["version"] }}</td>
+                </tr>
+            {% end for %}
+        </tbody>
+    </table>
+{% end %}

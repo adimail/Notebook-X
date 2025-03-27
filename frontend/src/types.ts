@@ -49,5 +49,8 @@ export interface Notebook {
 export interface DirectoryItem {
   name: string;
   isDir: boolean;
+  size?: number;
+  lastModified?: number;
+  type?: string;
   children?: DirectoryItem[];
 }

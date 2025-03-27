@@ -1,4 +1,4 @@
-import { DirectoryItem } from "../../components/api";
+import { DirectoryItem } from "../../types";
 
 export function getQueryParam(param: string): string {
   const params = new URLSearchParams(window.location.search);
@@ -26,31 +26,61 @@ export function renderDirectoryListing(
     container.appendChild(document.createElement("br"));
   }
 
+  // Create table
+  const table = document.createElement("table");
+  table.className = "directory-table";
+
+  // Table header
+  const headerRow = document.createElement("tr");
+  ["Name", "Type", "Size (KB)", "Last Modified"].forEach((title) => {
+    const th = document.createElement("th");
+    th.textContent = title;
+    headerRow.appendChild(th);
+  });
+  table.appendChild(headerRow);
+
+  // Table rows
   items.forEach((item) => {
+    const row = document.createElement("tr");
+
+    const nameCell = document.createElement("td");
     const itemLink = document.createElement("a");
+
     if (item.isDir) {
       const newPath = currentPath ? `${currentPath}/${item.name}` : item.name;
       itemLink.href = `/?path=${encodeURIComponent(newPath)}`;
       itemLink.textContent = `[DIR] ${item.name}`;
       itemLink.className = "dir-link";
     } else {
-      if (item.name.toLowerCase().endsWith(".ipynb")) {
-        const notebookPath = currentPath
-          ? `${currentPath}/${item.name}`
-          : item.name;
-        itemLink.href = `/notebook/${encodeURIComponent(notebookPath)}`;
-        itemLink.textContent = item.name;
-        itemLink.className = "notebook-link";
-      } else {
-        const filePath = currentPath
-          ? `${currentPath}/${item.name}`
-          : item.name;
-        itemLink.href = `/open/${encodeURIComponent(filePath)}`;
-        itemLink.textContent = item.name;
-        itemLink.className = "file-link";
-      }
+      const filePath = currentPath ? `${currentPath}/${item.name}` : item.name;
+      itemLink.href = `/open/${encodeURIComponent(filePath)}`;
+      itemLink.textContent = item.name;
+      itemLink.className = "file-link";
     }
-    container.appendChild(itemLink);
-    container.appendChild(document.createElement("br"));
+
+    nameCell.appendChild(itemLink);
+    row.appendChild(nameCell);
+
+    // Type
+    const typeCell = document.createElement("td");
+    typeCell.textContent = item.type || "unknown";
+    row.appendChild(typeCell);
+
+    // Size
+    const sizeCell = document.createElement("td");
+    sizeCell.textContent = item.size ? (item.size / 1024).toFixed(2) : "-";
+    row.appendChild(sizeCell);
+
+    // Last Modified
+    const dateCell = document.createElement("td");
+    const lastModified = item.lastModified
+      ? new Date(item.lastModified * 1000).toLocaleString()
+      : "-";
+    dateCell.textContent = lastModified;
+    row.appendChild(dateCell);
+
+    table.appendChild(row);
   });
+
+  container.appendChild(table);
 }

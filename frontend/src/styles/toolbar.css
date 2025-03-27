@@ -3,6 +3,9 @@
   padding: 5px;
   border-bottom: 2px solid var(--border-color);
   box-shadow: var(--box-shadow);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 }
 
 .toolbar-title {
@@ -19,6 +22,36 @@
 .toolbar-links a {
   color: var(--text-color);
   text-decoration: none;
-  font-size: 1rem;
   border-radius: var(--border-radius);
+}
+
+.version-info {
+  margin-left: auto;
+}
+
+.version-column {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.9em;
+  padding: 5px 10px;
+  text-align: right;
+  justify-content: center;
+}
+
+#packages-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+#packages-table th,
+#packages-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+#packages-table th {
+  background-color: gray;
 }

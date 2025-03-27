@@ -2,20 +2,8 @@ import os
 import json
 import tornado.web
 from server.src.utils.file_utils import get_file_content
-
-
-class BaseHandler(tornado.web.RequestHandler):
-    def initialize(self, base_dir=None):
-        self.base_dir = os.getcwd()
-
-    def _sanitize_path(self, path):
-        """Prevent directory traversal by ensuring path stays within base_dir."""
-        full_path = os.path.abspath(os.path.join(self.base_dir, path))
-        if not full_path.startswith(self.base_dir):
-            raise tornado.web.HTTPError(
-                403, "Access denied: Path outside base directory"
-            )
-        return full_path
+from server.src.utils.excluded_dirs import EXCLUDE_DIRS, FileTypeMappings
+from .base_handler import BaseHandler
 
 
 class HomeHandler(BaseHandler):
@@ -164,8 +152,10 @@ class APIFilesHandler(BaseHandler):
         root_path = self.get_argument("path", default="")
         try:
             full_path = self._sanitize_path(root_path)
+            if not os.path.exists(full_path):
+                raise tornado.web.HTTPError(400, "Path does not exist")
             if not os.path.isdir(full_path):
-                raise tornado.web.HTTPError(400, "Invalid directory path")
+                raise tornado.web.HTTPError(400, "Path is not a directory")
             tree = self.build_tree(full_path)
             self.write(tree)
         except tornado.web.HTTPError as e:
@@ -173,16 +163,36 @@ class APIFilesHandler(BaseHandler):
             self.write({"error": e.reason})
 
     def build_tree(self, path):
-        """Recursively build the directory tree."""
-        tree = {"name": os.path.basename(path) or "root", "isDir": True, "children": []}
+        """Recursively build the directory tree with additional file metadata."""
+        tree = {
+            "name": os.path.basename(path) or "root",
+            "type": "directory",
+            "isDir": True,
+            "children": [],
+        }
+        directories = []
+        files = []
+
         try:
             for item in sorted(os.listdir(path)):
                 item_path = os.path.join(path, item)
+
+                if os.path.basename(item_path) in EXCLUDE_DIRS:
+                    continue
+
                 if os.path.isdir(item_path):
-                    subtree = self.build_tree(item_path)
-                    tree["children"].append(subtree)
+                    directories.append(self.build_tree(item_path))
                 else:
-                    tree["children"].append({"name": item, "isDir": False})
+                    file_info = {
+                        "name": item,
+                        "isDir": False,
+                        "type": FileTypeMappings.get_type(item),
+                        "size": os.path.getsize(item_path),
+                        "lastModified": os.path.getmtime(item_path),
+                    }
+                    files.append(file_info)
         except PermissionError:
-            tree["children"].append({"name": "Permission Denied", "isDir": False})
+            files.append({"name": "Permission Denied", "isDir": False, "type": "error"})
+
+        tree["children"] = directories + files
         return tree
