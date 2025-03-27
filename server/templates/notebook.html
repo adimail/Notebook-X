@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block toolbar %}
+    {% include "toolbar.html" %}
+{% end %}
+{% block content %}
+    <div id="notebook-container">
+        <h1>{{ title }}</h1>
+        <a href="/?path={{ current_path }}">Back to directory</a>
+        <div class="notebook-viewer">
+            {% for cell in notebook.cells %}
+                <div class="cell {{ cell.cell_type }}">
+                    {% if cell.cell_type == "markdown" %}
+                        {{ cell.source|join("\n") |markdown }}
+                    {% elif cell.cell_type == "code" %}
+                        <pre>{{ cell.source|join('\n') }}</pre>
+                        {% if cell.outputs %}
+                            <div class="cell-output">
+                                {% for output in cell.outputs %}
+                                    {% if output.text %}
+                                        <pre>{{ output.text|join('\n') }}</pre>
+                                    {% else %}
+                                        <pre>{{ output|json }}</pre>
+                                    {% end %}
+                                {% end %}
+                            </div>
+                        {% end %}
+                    {% end %}
+                </div>
+            {% end %}
+        </div>
+    </div>
+{% end %}

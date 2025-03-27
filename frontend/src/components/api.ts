@@ -1,8 +1,4 @@
-interface DirectoryItem {
-  name: string;
-  isDir: boolean;
-  children?: DirectoryItem[];
-}
+import { DirectoryItem } from "../types";
 
 async function fetchEntireDirectoryStructure(
   rootPath: string = "",

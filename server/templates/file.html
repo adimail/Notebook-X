@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block toolbar %}
+    {% include "toolbar.html" %}
+{% end %}
+{% block content %}
+    <div id="file-container">
+        <h2>{{ title }}</h2>
+        <a href="/?path={{ current_path }}">back to directory</a>
+        <div class="file-viewer">
+            <pre>{{ content }}</pre>
+        </div>
+    </div>
+{% end %}

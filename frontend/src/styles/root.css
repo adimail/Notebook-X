@@ -1,0 +1,30 @@
+:root {
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+
+  --cell-bg: #1e1e1e;
+  --cell-border: #333;
+
+  --toolbar-bg: #252525;
+
+  --primary-color: #1e88e5;
+  --primary-hover: #1565c0;
+  --secondary-color: #424242;
+  --secondary-hover: #616161;
+
+  --font-family: monospace;
+
+  --container-padding: 12px;
+  --border-radius: 6px;
+  --box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  --transition-speed: 0.3s;
+
+  --code-bg: #282c34;
+  --code-text: #abb2bf;
+
+  --dir-color: #4caf50;
+  --file-color: #ff5252;
+  --notebook-color: #fff;
+
+  --border-color: #444;
+}

@@ -34,9 +34,21 @@ export function renderDirectoryListing(
       itemLink.textContent = `[DIR] ${item.name}`;
       itemLink.className = "dir-link";
     } else {
-      itemLink.href = "#";
-      itemLink.textContent = item.name;
-      itemLink.className = "file-link";
+      if (item.name.toLowerCase().endsWith(".ipynb")) {
+        const notebookPath = currentPath
+          ? `${currentPath}/${item.name}`
+          : item.name;
+        itemLink.href = `/notebook/${encodeURIComponent(notebookPath)}`;
+        itemLink.textContent = item.name;
+        itemLink.className = "notebook-link";
+      } else {
+        const filePath = currentPath
+          ? `${currentPath}/${item.name}`
+          : item.name;
+        itemLink.href = `/open/${encodeURIComponent(filePath)}`;
+        itemLink.textContent = item.name;
+        itemLink.className = "file-link";
+      }
     }
     container.appendChild(itemLink);
     container.appendChild(document.createElement("br"));

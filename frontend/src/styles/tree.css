@@ -1,37 +1,36 @@
-/* Style the directory listing container */
 .directory-listing {
-  padding: 10px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
+  padding: var(--container-padding);
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
 }
 
-/* Style the "up" navigation link */
 .up-link {
   font-weight: bold;
-  color: #007bff;
+  color: var(--primary-color);
   text-decoration: none;
+  display: block;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  border-radius: var(--border-radius);
 }
 
-.up-link:hover {
-  text-decoration: underline;
+.dir-link,
+.file-link,
+.notebook-link {
+  display: block;
+  text-decoration: none;
+  border-radius: var(--border-radius);
 }
 
-/* Style directory links */
 .dir-link {
-  color: #28a745;
-  text-decoration: none;
+  color: var(--dir-color);
 }
 
-.dir-link:hover {
-  text-decoration: underline;
-}
-
-/* Style file links */
 .file-link {
-  color: #dc3545;
-  text-decoration: none;
+  color: var(--file-color);
 }
 
-.file-link:hover {
-  text-decoration: underline;
+.notebook-link {
+  color: var(--notebook-color);
 }

@@ -1,3 +1,2 @@
-import "./styles/main.css";
-import "./styles/tree.css";
+import "./styles/index.css";
 import "./utils";
