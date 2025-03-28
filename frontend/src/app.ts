@@ -1,3 +1,2 @@
-import "./styles/index.css";
-import "./utils";
-import "./components/notebook";
+import "@/styles/index.css";
+import "@/utils";

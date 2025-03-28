@@ -5,9 +5,7 @@ from server.src.handlers.file_handler import (
     HomeHandler,
     FileHandler,
     APIFilesHandler,
-    APIContentHandler,
     NotebookHandler,
-    GetDirListingHandler,
 )
 from server.src.handlers.websocket_handler import WebSocketHandler
 from server.src.handlers.kernel_handler import KernelHandler
@@ -27,12 +25,8 @@ def make_app():
             (r"/", HomeHandler, dict(base_dir=base_dir)),
             (r"/notebook/(.*)", NotebookHandler, dict(base_dir=base_dir)),
             (r"/open/(.*)", FileHandler, dict(base_dir=base_dir)),
-            (r"/files/(.*)", FileHandler, dict(base_dir=base_dir)),
-            (r"/get-dir-listing", GetDirListingHandler, dict(base_dir=base_dir)),
-            (r"/api/content", APIContentHandler, dict(base_dir=base_dir)),
             (r"/api/files", APIFilesHandler, dict(base_dir=base_dir)),
             (r"/api/packages", PackagesHandler),
-            (r"/packages", PackagesHandler),
             (r"/ws", WebSocketHandler),
             (r"/kernel", KernelHandler),
             (

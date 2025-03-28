@@ -1,4 +1,4 @@
-import { DirectoryItem } from "../../types";
+import { DirectoryItem } from "@/types";
 
 export function getQueryParam(param: string): string {
   const params = new URLSearchParams(window.location.search);

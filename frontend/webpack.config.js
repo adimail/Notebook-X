@@ -14,6 +14,10 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".js"],
+    modules: [path.resolve(__dirname, "src"), "node_modules"],
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
   },
   module: {
     rules: [
@@ -33,4 +37,7 @@ module.exports = {
     minimizer: [`...`, new CssMinimizerPlugin()],
   },
   plugins: [new MiniCssExtractPlugin({ filename: "styles.css" })],
+  watchOptions: {
+    ignored: /node_modules/,
+  },
 };

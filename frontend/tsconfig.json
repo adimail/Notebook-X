@@ -3,6 +3,12 @@
     "target": "ES6",
     "module": "ESNext",
     "outDir": "dist",
-    "strict": true
-  }
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*", "node_modules/*"]
+    },
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*"]
 }
