@@ -5,3 +5,5 @@ I’m building a custom Jupyter Notebook clone from scratch, designed to replica
 ```
 make start
 ```
+
+![Demo](docs/demo.jpeg)
