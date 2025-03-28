@@ -13,17 +13,3 @@
         </div>
     </div>
 </div>
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        const response = await fetch('/api/packages');
-        const data = await response.json();
-        document.getElementById('python-version').textContent = data.python_version;
-        document.getElementById('pip-version').textContent = data.pip_version;
-    } catch (error) {
-        console.error('Error fetching version info:', error);
-        document.getElementById('python-version').textContent = 'Python: error';
-        document.getElementById('pip-version').textContent = 'pip: error';
-    }
-});
-</script>

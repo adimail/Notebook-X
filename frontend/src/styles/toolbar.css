@@ -22,7 +22,6 @@
 .toolbar-links a {
   color: var(--text-color);
   text-decoration: none;
-  border-radius: var(--border-radius);
 }
 
 .version-info {

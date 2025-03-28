@@ -1,0 +1,118 @@
+.notebook {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--editor-notebook-padding, 8px);
+  background-color: var(--bg-color, #121212);
+  color: var(--text-color, #e0e0e0);
+}
+
+.cell {
+  width: 100%;
+  background-color: var(--editor-cell-bg, #1e1e1e);
+  border: 1px solid var(--editor-cell-border, #333);
+  padding: var(--editor-cell-padding, 8px);
+  margin-bottom: var(--editor-cell-padding, 8px);
+  border-radius: var(--editor-cell-radius, 0);
+  box-shadow: var(--editor-box-shadow, 2px 2px 8px rgba(0, 0, 0, 0.2));
+  position: relative;
+}
+
+.cell-toolbar {
+  display: flex;
+  gap: var(--editor-toolbar-gap, 4px);
+  margin-bottom: 6px;
+  justify-content: flex-end;
+  padding: 4px;
+  border-radius: 3px;
+}
+
+.code-cell {
+  background-color: var(--editor-code-bg, #282c34);
+  color: var(--editor-code-text, #abb2bf);
+  font-family: var(--editor-font-family-code, monospace);
+}
+
+.markdown-cell {
+  background-color: var(--editor-markdown-bg, #2c2c2c);
+  color: var(--text-color, #e0e0e0);
+  font-family: var(--editor-font-family-md, Arial, sans-serif);
+}
+
+.execution-count {
+  color: #999;
+  margin-right: 8px;
+}
+
+.input-area,
+.output-area {
+  background-color: #2a2a2a;
+  border: 1px solid var(--border-color, #444);
+  padding: 6px;
+  border-radius: 2px;
+  margin-top: 4px;
+}
+
+.input-code,
+.output-code {
+  margin: 0;
+  font-size: var(--editor-font-size, 14px);
+  line-height: 1.4em;
+}
+
+.rendered-markdown {
+  background-color: #2a2a2a;
+  padding: 6px;
+  border-radius: 2px;
+  border: 1px solid var(--border-color, #444);
+}
+
+.markdown-editor {
+  width: 100%;
+  height: 80px;
+  font-size: var(--editor-font-size, 14px);
+  font-family: var(--editor-font-family-md, Arial, sans-serif);
+  display: none;
+  margin-top: 4px;
+  border: 1px solid var(--border-color, #444);
+  border-radius: 2px;
+  padding: 6px;
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.run-btn,
+.edit-markdown-btn,
+.move-up-btn,
+.move-down-btn,
+.duplicate-btn,
+.delete-btn {
+  cursor: pointer;
+  background-color: var(--editor-run-btn-bg, #424242);
+  border: 1px solid #333;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  padding: 2px 6px;
+  color: #fff;
+  transition: background-color var(--transition-speed, 0.3s);
+}
+
+.run-btn:hover,
+.edit-markdown-btn:hover,
+.move-up-btn:hover,
+.move-down-btn:hover,
+.duplicate-btn:hover,
+.delete-btn:hover {
+  background-color: var(--editor-run-btn-hover-bg, #616161);
+}
+
+.output-area:empty {
+  display: none;
+}

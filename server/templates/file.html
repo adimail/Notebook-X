@@ -3,9 +3,11 @@
     {% include "toolbar.html" %}
 {% end %}
 {% block content %}
-    <div id="file-container">
-        <h2>{{ title }}</h2>
-        <a href="/?path={{ current_path }}">back to directory</a>
+    <div id="editor-container">
+        <div class="header">
+            <h2>{{ title }}</h2>
+            <a href="/?path={{ current_path }}">back to directory</a>
+        </div>
         <div class="file-viewer">
             <pre>{{ content }}</pre>
         </div>

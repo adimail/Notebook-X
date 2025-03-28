@@ -1,3 +1,4 @@
+import "./toolbar";
 import {
   fetchEntireDirectoryStructure,
   getItemsAtPath,

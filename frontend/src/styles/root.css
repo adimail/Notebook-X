@@ -15,7 +15,7 @@
   --font-family: monospace;
 
   --container-padding: 12px;
-  --border-radius: 6px;
+  --border-radius: 0;
   --box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
   --transition-speed: 0.3s;
 
@@ -27,4 +27,26 @@
   --notebook-color: #fff;
 
   --border-color: #444;
+
+  --editor-notebook-padding: 8px;
+  --editor-cell-bg: #1e1e1e;
+  --editor-cell-border: #333;
+  --editor-cell-padding: 8px;
+  --editor-cell-radius: 0;
+  --editor-box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+
+  --editor-toolbar-gap: 4px;
+  --editor-toolbar-bg: #252525;
+
+  --editor-font-size: 14px;
+  --editor-font-family-code: "Courier New", monospace;
+  --editor-font-family-md: "Courier New", monospace;
+
+  --editor-code-bg: #282c34;
+  --editor-code-text: #abb2bf;
+
+  --editor-markdown-bg: #282c34;
+
+  --editor-run-btn-bg: #424242;
+  --editor-run-btn-hover-bg: #616161;
 }

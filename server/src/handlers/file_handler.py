@@ -16,7 +16,7 @@ class HomeHandler(BaseHandler):
             self.render(
                 "home.html",
                 title="HOME | Notebook X",
-                current_path="Home/" + current_path,
+                current_path="Home" if current_path == "" else current_path,
             )
         except tornado.web.HTTPError as e:
             self.set_status(e.status_code)
@@ -39,8 +39,8 @@ class NotebookHandler(BaseHandler):
 
             self.render(
                 "notebook.html",
-                title=f"Notebook: {os.path.basename(path)}",
-                notebook=notebook_content,
+                title=f"{os.path.basename(path)}",
+                notebook_content=notebook_content,
                 current_path=os.path.dirname(path),
             )
         except json.JSONDecodeError:
