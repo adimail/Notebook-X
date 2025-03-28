@@ -5,9 +5,9 @@ from server.src.handlers.file_handler import (
     HomeHandler,
     FileHandler,
     APIFilesHandler,
-    NotebookHandler,
 )
 from server.src.handlers.websocket_handler import WebSocketHandler
+from server.src.handlers.notebook_handler import NotebookHandler
 from server.src.handlers.kernel_handler import KernelHandler
 from server.src.handlers.packages_handler import PackagesHandler
 
