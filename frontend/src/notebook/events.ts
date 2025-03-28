@@ -8,3 +8,29 @@ export function setupEventListeners() {
     });
   });
 }
+
+export async function createNotebook(currentPath: string) {
+  const notebookName = prompt("Enter the name of the new notebook:");
+  if (!notebookName) return;
+
+  const notebookPath = `${currentPath ? currentPath + "/" : ""}${notebookName}.ipynb`;
+
+  try {
+    const response = await fetch(
+      `/api/notebook/create?path=${encodeURIComponent(notebookPath)}`,
+      {
+        method: "POST",
+      },
+    );
+
+    if (response.ok) {
+      alert("Notebook created successfully!");
+      location.reload(); // Refresh the directory listing
+    } else {
+      const error = await response.json();
+      alert(`Error: ${error.message}`);
+    }
+  } catch (error) {
+    console.error("Failed to create notebook:", error);
+  }
+}

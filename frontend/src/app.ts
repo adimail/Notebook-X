@@ -1,11 +1,21 @@
 import "@/styles/index.css";
+import { createNotebook } from "./notebook/events";
+import { getQueryParam } from "./tree/tree";
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const currentPath = getQueryParam("path") || "";
+
   const py_v = document.getElementById("python-version");
   const pip_v = document.getElementById("pip-version");
+
+  document.getElementById("new-notebook-btn")?.addEventListener("click", () => {
+    createNotebook(currentPath);
+  });
+
   if (!py_v || !pip_v) {
     return;
   }
+
   try {
     const response = await fetch("/api/packages");
     const data = await response.json();

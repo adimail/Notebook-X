@@ -11,22 +11,6 @@
             <h2>{{ title }}</h2>
             <a href="/?path={{ current_path }}">Back to Directory</a>
         </div>
-        <div class="notebook-metadata">
-            <div class="kernel-info">
-                Kernel: {{ kernelspec['display_name'] }} ({{ language_info['name'] }} {{ language_info['version'] }})
-            </div>
-            <div class="format-info">Format: {{ nbformat }}.{{ nbformat_minor }}</div>
-            {% if last_checkpoint %}
-                <div class="checkpoint-info">
-                    Last Checkpoint: {{ last_checkpoint['filename'] }} ({{ last_checkpoint['modified'] }})
-                </div>
-            {% end %}
-            <div class="codemirror-info">
-                CodeMirror Mode: {{ language_info['codemirror_mode']['name'] }}
-                | MIME: {{ language_info['mimetype'] }}
-                | Ext: {{ language_info['file_extension'] }}
-            </div>
-        </div>
         <div class="notebook">
             {% for cell in cells %}
                 {% if cell['cell_type'] == 'code' %}
@@ -40,14 +24,29 @@
                         </div>
                         <div class="input-area">
                             <span class="execution-count">[{{ cell['execution_count'] if cell['execution_count'] else '' }}]</span>
-                            <pre class="input-code"><code>{{ '\n'.join(cell['source']) }}</code></pre>
+                            <pre class="input-code"><code>{{ cell['source'] }}</code></pre>
                         </div>
                         <div class="output-area">
-                            {% if cell['outputs'] %}
-                                {% for output in cell['outputs'] %}
-                                    <pre class="output-code">
-                                        <code>{{ '\n'.join(output.get('text', '')) }}</code>
-                                    </pre>
+                            {% if cell.outputs %}
+                                {% for output in cell.outputs %}
+                                    {% if output.output_type == "stream" %}
+                                        <pre class="output-code stream-output"><code>{{ output.text }}</code></pre>
+                                    {% elif output.output_type == "display_data" or output.output_type == "execute_result" %}
+                                        {% if "text/html" in output.data %}
+                                            <div class="output-html">{{ output.data["text/html"] }}</div>
+                                        {% elif "image/png" in output.data %}
+                                            <img class="output-image"
+                                                 src="data:image/png;base64,{{ output.data['image/png'] }}" />
+                                        {% elif "text/plain" in output.data %}
+                                            <pre class="output-code output-html"><code>{{ output.data["text/plain"] }}</code></pre>
+                                        {% else %}
+                                            <pre class="output-code"><code>Unknown output format</code></pre>
+                                        {% end %}
+                                    {% elif output.output_type == "error" %}
+                                        <pre class="output-code error-output">
+                                            <code>{{ output.traceback | join("\n") }}</code>
+                                        </pre>
+                                    {% end %}
                                 {% end %}
                             {% else %}
                                 <pre class="output-code"><code></code></pre>
@@ -63,11 +62,12 @@
                             <button class="duplicate-btn">Duplicate</button>
                             <button class="delete-btn">Delete</button>
                         </div>
-                        <div class="rendered-markdown">{{ '\n'.join(cell['source']) }}</div>
+                        <div class="rendered-markdown">{{ cell['source'] }}</div>
                         <textarea class="markdown-editor"></textarea>
                     </div>
                 {% end %}
             {% end %}
         </div>
     </div>
+    {{ notebook }}
 {% end %}

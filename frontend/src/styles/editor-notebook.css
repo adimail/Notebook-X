@@ -5,6 +5,9 @@
   padding: var(--editor-notebook-padding, 8px);
   background-color: var(--bg-color, #121212);
   color: var(--text-color, #e0e0e0);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .cell {
@@ -51,6 +54,9 @@
   padding: 6px;
   border-radius: 2px;
   margin-top: 4px;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
 .input-code,
@@ -79,6 +85,14 @@
   padding: 6px;
   background-color: #1e1e1e;
   color: #e0e0e0;
+}
+
+.output-area img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  margin: auto;
 }
 
 .header {

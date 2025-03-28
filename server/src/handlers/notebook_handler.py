@@ -1,7 +1,7 @@
 import os
 import tornado.web
 import nbformat
-from nbformat.v4 import new_notebook, new_code_cell, new_markdown_cell
+from nbformat.v4 import new_notebook, new_code_cell, new_markdown_cell, new_notebook
 from .base_handler import BaseHandler
 from datetime import datetime
 
@@ -36,6 +36,7 @@ class NotebookHandler(BaseHandler):
                 nbformat_minor=notebook.nbformat_minor,
                 last_checkpoint=last_checkpoint,
                 metadata=notebook.metadata,
+                notebook=notebook,
             )
         except Exception as e:
             raise tornado.web.HTTPError(400, str(e))
@@ -103,3 +104,42 @@ class NotebookHandler(BaseHandler):
                     ).isoformat(),
                 }
         return None
+
+
+class CreateNotebookHandler(BaseHandler):
+    def post(self):
+        """Handle creating a new Jupyter notebook"""
+        path = self.get_argument("path", None)
+        if not path:
+            raise tornado.web.HTTPError(400, "No path provided")
+
+        full_path = os.path.abspath(path)
+        if os.path.exists(full_path):
+            raise tornado.web.HTTPError(400, "Notebook already exists")
+
+        try:
+            notebook = new_notebook()
+            with open(full_path, "w", encoding="utf-8") as f:
+                nbformat.write(notebook, f)
+
+            self.write({"message": "Notebook created", "path": full_path})
+        except Exception as e:
+            raise tornado.web.HTTPError(500, str(e))
+
+
+class DeleteNotebookHandler(BaseHandler):
+    def post(self):
+        """Handle deleting a Jupyter notebook"""
+        path = self.get_argument("path", None)
+        if not path:
+            raise tornado.web.HTTPError(400, "No path provided")
+
+        full_path = os.path.abspath(path)
+        if not os.path.exists(full_path):
+            raise tornado.web.HTTPError(404, "Notebook not found")
+
+        try:
+            os.remove(full_path)
+            self.write({"message": "Notebook deleted", "path": full_path})
+        except Exception as e:
+            raise tornado.web.HTTPError(500, str(e))
