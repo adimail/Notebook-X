@@ -8,6 +8,7 @@ module.exports = {
     app: "./src/app.ts",
     notebook: "./src/notebook.ts",
     tree: "./src/tree.ts",
+    file: "./src/file.ts",
   },
   output: {
     filename: "[name].js",

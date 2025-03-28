@@ -1,15 +1,24 @@
 {% extends "base.html" %}
+{% block head %}
+    <script src="{{ static_url('file.js') }}"></script>
+{% end %}
 {% block toolbar %}
     {% include "toolbar.html" %}
 {% end %}
 {% block content %}
     <div id="editor-container">
         <div class="header">
-            <h2>{{ title }}</h2>
-            <a href="/?path={{ current_path }}">back to directory</a>
+            <a href="/?path={{ current_path }}">back</a>
+            <h2 id="file-title">
+                <span id="save-indicator" class="status-indicator saved"></span>
+                {{ title }}
+            </h2>
         </div>
-        <div class="file-viewer">
-            <pre>{{ content }}</pre>
+        <div class="files-button-group">
+            <button id="save-button">Save</button>
+            <button id="undo-button">Undo</button>
+            <button id="reset-button">Reset</button>
         </div>
+        <textarea id="file-editor">{{ content }}</textarea>
     </div>
 {% end %}

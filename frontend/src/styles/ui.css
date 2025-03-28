@@ -16,8 +16,13 @@ input[type="checkbox"] {
 footer {
   text-align: center;
   margin-bottom: 50px;
+  margin-top: 200px;
 }
 
 footer a {
   color: cadetblue;
+}
+
+main {
+  padding: 10px 30px;
 }

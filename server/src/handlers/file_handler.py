@@ -138,6 +138,36 @@ class APIFilesHandler(BaseHandler):
         }
 
 
+class APISaveFileHandler(BaseHandler):
+    def post(self):
+        """Handle saving file content."""
+        try:
+            data = json.loads(self.request.body.decode("utf-8"))
+            file_path = data.get("path")
+            content = data.get("content")
+
+            if not file_path or not content:
+                raise tornado.web.HTTPError(400, "File path and content are required")
+
+            full_path = self._sanitize_path(file_path)
+
+            if not os.path.exists(full_path) or not os.path.isfile(full_path):
+                raise tornado.web.HTTPError(404, "File not found")
+
+            with open(full_path, "w", encoding="utf-8") as f:
+                f.write(content)
+
+            self.write({"status": "success", "message": "File saved successfully"})
+
+        except tornado.web.HTTPError as e:
+            self.set_status(e.status_code)
+            self.write({"error": e.reason})
+
+        except Exception as e:
+            self.set_status(500)
+            self.write({"error": str(e)})
+
+
 class APIDeleteFilesHandler(BaseHandler):
     def delete(self):
         try:

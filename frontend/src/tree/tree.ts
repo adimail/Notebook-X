@@ -135,6 +135,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const deleteButton = document.getElementById(
     "delete-button",
   ) as HTMLButtonElement;
+  if (!deleteButton) return;
   deleteButton.addEventListener("click", async () => {
     const selectedFiles = Array.from(
       document.querySelectorAll<HTMLInputElement>(

@@ -1,0 +1,52 @@
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.status-indicator.saved {
+  background-color: green;
+}
+
+.status-indicator.unsaved {
+  background-color: red;
+}
+
+.files-button-group {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+}
+
+.files-button-group button {
+  padding: 5px 10px;
+}
+
+#file-editor {
+  width: 80%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+textarea#file-editor {
+  width: 90%;
+  height: 90vh;
+  resize: none;
+  overflow: auto;
+  background-color: #2e2e2e;
+  color: white;
+  border: 1px solid #ccc;
+  font-family: monospace;
+  padding: 8px;
+  outline: none;
+  border: none;
+}
+
+textarea#file-editor:focus {
+  border: none;
+  outline: none;
+}

@@ -50,10 +50,6 @@
   color: var(--file-color);
 }
 
-#directory-container {
-  margin-bottom: 200px;
-}
-
 .tree-tools #new-notebook-btn {
   background-color: cadetblue;
   color: white;
