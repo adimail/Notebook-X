@@ -42,6 +42,10 @@
   color: var(--dir-color);
 }
 
+.notebook-link {
+  color: var(--notebook-color);
+}
+
 .file-link {
   color: var(--file-color);
 }

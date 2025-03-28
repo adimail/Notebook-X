@@ -21,7 +21,12 @@ class HomeHandler(BaseHandler):
             )
         except tornado.web.HTTPError as e:
             self.set_status(e.status_code)
-            self.render("error.html", error_message=e.reason)
+            self.render(
+                "error.html",
+                status_code=e.status_code,
+                title="An unknown error occured",
+                error=e,
+            )
 
 
 class FileHandler(BaseHandler):
@@ -53,7 +58,12 @@ class FileHandler(BaseHandler):
         except tornado.web.HTTPError as e:
             self.set_status(e.status_code)
             if self.request.path.startswith("/open/"):
-                self.render("error.html", error_message=e.reason)
+                self.render(
+                    "error.html",
+                    status_code=e.status_code,
+                    title="An unknown error occured",
+                    error=e,
+                )
             else:
                 self.write({"error": e.reason})
 

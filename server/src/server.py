@@ -12,6 +12,19 @@ from server.src.handlers.kernel_handler import KernelHandler
 from server.src.handlers.packages_handler import PackagesHandler
 
 
+class NotFoundHandler(tornado.web.RequestHandler):
+    """Custom handler for 404 errors that renders error.html."""
+
+    def prepare(self):
+        self.set_status(404)
+        self.render(
+            "error.html",
+            title="Page Not Found",
+            status_code=404,
+            error="The page you are looking for does not exist.",
+        )
+
+
 def make_app():
     base_dir = os.path.abspath(os.path.dirname(__file__))
     settings = {
@@ -27,6 +40,7 @@ def make_app():
             (r"/open/(.*)", FileHandler, dict(base_dir=base_dir)),
             (r"/api/files", APIFilesHandler, dict(base_dir=base_dir)),
             (r"/api/packages", PackagesHandler),
+            (r"/packages", PackagesHandler),
             (r"/ws", WebSocketHandler),
             (r"/kernel", KernelHandler),
             (
@@ -34,7 +48,7 @@ def make_app():
                 tornado.web.StaticFileHandler,
                 {"path": settings["static_path"]},
             ),
-            (r".*", tornado.web.ErrorHandler, {"status_code": 404}),
         ],
+        default_handler_class=NotFoundHandler,
         **settings
     )

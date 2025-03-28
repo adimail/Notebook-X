@@ -1,4 +1,3 @@
-import "./toolbar";
 import { getQueryParam, renderDirectoryListing } from "./tree";
 
 document.addEventListener("DOMContentLoaded", async () => {

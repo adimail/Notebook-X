@@ -38,4 +38,9 @@ class PackagesHandler(BaseHandler):
             if self.request.path.startswith("/api"):
                 self.write({"error": f"Failed to fetch package info: {str(e)}"})
             else:
-                self.render("error.html", error=str(e))
+                self.render(
+                    "error.html",
+                    status_code=500,
+                    title="Internal Server Error",
+                    error=e,
+                )

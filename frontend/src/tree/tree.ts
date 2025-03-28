@@ -26,7 +26,7 @@ export function renderDirectoryListing(
     container.appendChild(document.createElement("br"));
   }
 
-  // Create table
+  // table
   const table = document.createElement("table");
   table.className = "directory-table";
 
@@ -55,23 +55,25 @@ export function renderDirectoryListing(
       const filePath = currentPath ? `${currentPath}/${item.name}` : item.name;
       itemLink.href = `/open/${encodeURIComponent(filePath)}`;
       itemLink.textContent = item.name;
-      itemLink.className = "file-link";
+
+      if (item.name.endsWith(".ipynb")) {
+        itemLink.className = "notebook-link";
+      } else {
+        itemLink.className = "file-link";
+      }
     }
 
     nameCell.appendChild(itemLink);
     row.appendChild(nameCell);
 
-    // Type
     const typeCell = document.createElement("td");
     typeCell.textContent = item.type || "unknown";
     row.appendChild(typeCell);
 
-    // Size
     const sizeCell = document.createElement("td");
     sizeCell.textContent = item.size ? (item.size / 1024).toFixed(2) : "-";
     row.appendChild(sizeCell);
 
-    // Last Modified
     const dateCell = document.createElement("td");
     const lastModified = item.lastModified
       ? new Date(item.lastModified * 1000).toLocaleString()

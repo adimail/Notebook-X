@@ -7,6 +7,7 @@ module.exports = {
   entry: {
     app: "./src/app.ts",
     notebook: "./src/notebook.ts",
+    tree: "./src/tree.ts",
   },
   output: {
     filename: "[name].js",
