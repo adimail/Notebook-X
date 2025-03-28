@@ -5,12 +5,12 @@ from server.src.handlers.file_handler import (
     HomeHandler,
     FileHandler,
     APIFilesHandler,
+    APIDeleteFilesHandler,
 )
 from server.src.handlers.websocket_handler import WebSocketHandler
 from server.src.handlers.notebook_handler import (
     NotebookHandler,
     CreateNotebookHandler,
-    DeleteNotebookHandler,
 )
 from server.src.handlers.kernel_handler import KernelHandler
 from server.src.handlers.packages_handler import PackagesHandler
@@ -48,7 +48,7 @@ def make_app():
             (r"/ws", WebSocketHandler),
             (r"/kernel", KernelHandler),
             (r"/api/notebook/create", CreateNotebookHandler),
-            (r"/api/notebook/delete", DeleteNotebookHandler),
+            (r"/api/delete_files", APIDeleteFilesHandler, dict(base_dir=base_dir)),
             (
                 r"/static/(.*)",
                 tornado.web.StaticFileHandler,

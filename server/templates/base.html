@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>{{ title if title else "Jupyter Clone" }}</title>
-        <link rel="stylesheet" href="{{ static_url('styles.css') }}">
+        <link rel="stylesheet" href="{{ static_url("styles.css") }}">
         <script src="{{ static_url('app.js') }}"></script>
         {% block head %}
         {% end %}
@@ -13,6 +13,12 @@
         {% end %}
         {% block content %}
         {% end %}
+        <footer>
+            <p>
+                Made with ❤️ by <a href="https://adimail.github.io/" target="_blank">Aditya Godse</a>
+            </p>
+            <a href="https://github.com/adimail/Notebook-X" target="_blank">GitHub</a>
+        </footer>
         {% block scripts %}
         {% end %}
     </body>

@@ -136,3 +136,37 @@ class APIFilesHandler(BaseHandler):
             "isDir": True,
             "children": directories + ipynb_files + other_files,
         }
+
+
+class APIDeleteFilesHandler(BaseHandler):
+    def delete(self):
+        try:
+            data = json.loads(self.request.body.decode("utf-8"))
+            files = data.get("files", [])
+            if not files:
+                raise tornado.web.HTTPError(400, "No files specified")
+
+            deleted_files = []
+            for file_rel_path in files:
+                file_path = self._sanitize_path(file_rel_path)
+
+                if any(
+                    excluded in file_path.split(os.sep) for excluded in EXCLUDE_DIRS
+                ):
+                    self.write({"error": f"Deletion not allowed: {file_rel_path}"})
+                    return
+
+                if os.path.exists(file_path) and os.path.isfile(file_path):
+                    os.remove(file_path)
+                    deleted_files.append(file_rel_path)
+                else:
+                    self.write(
+                        {"error": f"File {file_rel_path} not found or not a file"}
+                    )
+                    return
+
+            self.write({"status": "success", "deleted": deleted_files})
+
+        except Exception as e:
+            self.set_status(500)
+            self.write({"error": str(e)})

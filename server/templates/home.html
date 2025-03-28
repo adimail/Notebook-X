@@ -7,5 +7,9 @@
 {% end %}
 {% block content %}
     <p>Path: {{ current_path }}</p>
+    <div class="tree-tools">
+        <button id="new-notebook-btn">New Notebook</button>
+        <button id="delete-button" disabled>Delete Selected</button>
+    </div>
     <div id="directory-container"></div>
 {% end %}

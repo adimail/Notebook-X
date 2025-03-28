@@ -49,3 +49,30 @@
 .file-link {
   color: var(--file-color);
 }
+
+#directory-container {
+  margin-bottom: 200px;
+}
+
+.tree-tools #new-notebook-btn {
+  background-color: cadetblue;
+  color: white;
+  border: none;
+  padding: 5px 7px;
+  font-size: 14px;
+}
+
+#delete-button {
+  background-color: gray;
+  color: white;
+  border: none;
+  padding: 5px 7px;
+  font-size: 14px;
+  cursor: not-allowed;
+  transition: background-color 0.3s ease-in-out;
+}
+
+#delete-button:enabled {
+  background-color: red;
+  cursor: pointer;
+}

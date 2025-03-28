@@ -24,13 +24,13 @@ export async function createNotebook(currentPath: string) {
     );
 
     if (response.ok) {
-      alert("Notebook created successfully!");
-      location.reload(); // Refresh the directory listing
+      location.reload();
     } else {
       const error = await response.json();
       alert(`Error: ${error.message}`);
     }
   } catch (error) {
     console.error("Failed to create notebook:", error);
+    alert("Failed to create notebook. Please try again.");
   }
 }

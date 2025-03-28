@@ -125,21 +125,3 @@ class CreateNotebookHandler(BaseHandler):
             self.write({"message": "Notebook created", "path": full_path})
         except Exception as e:
             raise tornado.web.HTTPError(500, str(e))
-
-
-class DeleteNotebookHandler(BaseHandler):
-    def post(self):
-        """Handle deleting a Jupyter notebook"""
-        path = self.get_argument("path", None)
-        if not path:
-            raise tornado.web.HTTPError(400, "No path provided")
-
-        full_path = os.path.abspath(path)
-        if not os.path.exists(full_path):
-            raise tornado.web.HTTPError(404, "Notebook not found")
-
-        try:
-            os.remove(full_path)
-            self.write({"message": "Notebook deleted", "path": full_path})
-        except Exception as e:
-            raise tornado.web.HTTPError(500, str(e))

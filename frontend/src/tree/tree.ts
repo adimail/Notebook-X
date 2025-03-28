@@ -26,22 +26,44 @@ export function renderDirectoryListing(
     container.appendChild(document.createElement("br"));
   }
 
-  // table
   const table = document.createElement("table");
   table.className = "directory-table";
 
-  // Table header
   const headerRow = document.createElement("tr");
+
+  const selectAllTh = document.createElement("th");
+  const selectAllCheckbox = document.createElement("input");
+  selectAllCheckbox.type = "checkbox";
+  selectAllCheckbox.addEventListener("change", () => {
+    checkboxes.forEach((cb) => (cb.checked = selectAllCheckbox.checked));
+    updateDeleteButtonState();
+  });
+  selectAllTh.appendChild(selectAllCheckbox);
+  headerRow.appendChild(selectAllTh);
+
   ["Name", "Type", "Size (KB)", "Last Modified"].forEach((title) => {
     const th = document.createElement("th");
     th.textContent = title;
     headerRow.appendChild(th);
   });
+
   table.appendChild(headerRow);
 
-  // Table rows
+  const checkboxes: HTMLInputElement[] = [];
+
   items.forEach((item) => {
     const row = document.createElement("tr");
+
+    const checkboxCell = document.createElement("td");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.dataset.filepath = currentPath
+      ? `${currentPath}/${item.name}`
+      : item.name;
+    checkbox.addEventListener("change", updateDeleteButtonState);
+    checkboxes.push(checkbox);
+    checkboxCell.appendChild(checkbox);
+    row.appendChild(checkboxCell);
 
     const nameCell = document.createElement("td");
     const itemLink = document.createElement("a");
@@ -86,3 +108,60 @@ export function renderDirectoryListing(
 
   container.appendChild(table);
 }
+
+function updateDeleteButtonState() {
+  const deleteButton = document.getElementById(
+    "delete-button",
+  ) as HTMLButtonElement;
+  const selectedFiles = document.querySelectorAll(
+    'input[type="checkbox"]:checked',
+  );
+  deleteButton.disabled = selectedFiles.length === 0;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const currentPath = getQueryParam("path");
+
+  try {
+    const response = await fetch(
+      `/api/files?path=${encodeURIComponent(currentPath)}`,
+    );
+    const directoryData = await response.json();
+    renderDirectoryListing(directoryData.children, currentPath);
+  } catch (error) {
+    console.error("Error loading directory:", error);
+  }
+
+  const deleteButton = document.getElementById(
+    "delete-button",
+  ) as HTMLButtonElement;
+  deleteButton.addEventListener("click", async () => {
+    const selectedFiles = Array.from(
+      document.querySelectorAll<HTMLInputElement>(
+        'input[type="checkbox"]:checked',
+      ),
+    ).map((cb) => cb.dataset.filepath as string);
+
+    if (selectedFiles.length === 0) return;
+
+    const confirmed = confirm(
+      `Are you sure you want to delete ${selectedFiles.length} files?`,
+    );
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch("/api/delete_files", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ files: selectedFiles }),
+      });
+
+      if (!response.ok) throw new Error("Failed to delete files");
+
+      location.reload();
+    } catch (error) {
+      console.error("Error deleting files:", error);
+      alert("Error deleting files");
+    }
+  });
+});

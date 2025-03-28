@@ -5,3 +5,19 @@ button {
   cursor: pointer;
   border-radius: var(--border-radius);
 }
+
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: blue;
+}
+
+footer {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+footer a {
+  color: cadetblue;
+}
