@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block head %}
+    <script src="{{ static_url('notebook.js') }}"></script>
+{% end %}
 {% block toolbar %}
     {% include "toolbar.html" %}
 {% end %}
@@ -8,8 +11,25 @@
             <h2>{{ title }}</h2>
             <a href="/?path={{ current_path }}">back to directory</a>
         </div>
+        <div class="notebook-metadata">
+            <div class="kernel-info">
+                Kernel: {{ kernelspec['display_name'] }} ({{ language_info['name'] }} {{ language_info['version'] }})
+            </div>
+            <div class="format-info">Format: {{ nbformat }}.{{ nbformat_minor }}</div>
+            {% if last_checkpoint %}
+                <div class="checkpoint-info">
+                    Last Checkpoint: {{ last_checkpoint['filename'] }}
+                    ({{ last_checkpoint['modified'] }})
+                </div>
+            {% end %}
+            <div class="codemirror-info">
+                CodeMirror Mode: {{ language_info['codemirror_mode']['name'] }}
+                | MIME: {{ language_info['mimetype'] }}
+                | Ext: {{ language_info['file_extension'] }}
+            </div>
+        </div>
         <div class="notebook">
-            {% for cell in notebook_content['cells'] %}
+            {% for cell in cells %}
                 {% if cell['cell_type'] == 'code' %}
                     <!-- CODE CELL -->
                     <div class="cell code-cell">
@@ -24,16 +44,16 @@
                         <div class="input-area">
                             <span class="execution-count">[{{ cell['execution_count'] if cell['execution_count'] else '' }}]</span>
                             <pre class="input-code">
-							<code>{{ cell['source'] }}</code>
-                    </pre>
+                                <code>{{ '\n'.join(cell['source']) }}</code>
+                            </pre>
                         </div>
                         <!-- Output area -->
                         <div class="output-area">
                             {% if cell['outputs'] %}
                                 {% for output in cell['outputs'] %}
                                     <pre class="output-code">
-									<code>{{ output['text'] if output['text'] else '' }}</code>
-                        </pre>
+                                        <code>{{ '\n'.join(output['text']) if output['text'] else '' }}</code>
+                                    </pre>
                                 {% end %}
                             {% else %}
                                 <pre class="output-code"><code></code></pre>
@@ -51,7 +71,7 @@
                             <button class="delete-btn">Delete</button>
                         </div>
                         <!-- Rendered markdown area -->
-                        <div class="rendered-markdown">{{ cell['source'] }}</div>
+                        <div class="rendered-markdown">{{ '\n'.join(cell['source']) }}</div>
                         <!-- Hidden text area for editing markdown -->
                         <textarea class="markdown-editor"></textarea>
                     </div>

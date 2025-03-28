@@ -4,9 +4,12 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 module.exports = {
   mode: "production",
-  entry: "./src/app.ts",
+  entry: {
+    app: "./src/app.ts",
+    notebook: "./src/notebook.ts",
+  },
   output: {
-    filename: "app.js",
+    filename: "[name].js",
     path: path.resolve(__dirname, "dist"),
   },
   resolve: {

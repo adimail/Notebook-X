@@ -1,3 +1,5 @@
+let kernelId: string | null = null;
+
 function notebookxMarkdownRender(mdText: string): string {
   return mdText;
 }
@@ -18,7 +20,14 @@ function simulateExecution(): string {
   return Math.random() > 0.5 ? "Simulated output here." : "";
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const response = await fetch("/kernel");
+    const data = await response.json();
+    kernelId = data.kernel_id;
+  } catch (error) {
+    console.error("Error fetching kernel id:", error);
+  }
   const codeCells = document.querySelectorAll(".code-cell");
   codeCells.forEach((cell) => {
     updateOutputVisibility(cell as HTMLElement);
@@ -26,17 +35,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const runButtons = document.querySelectorAll(".code-cell .run-btn");
   runButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", async () => {
       const cell = (btn as HTMLElement).closest(".cell") as HTMLElement;
       if (!cell) return;
+      const codeElement = cell.querySelector(
+        ".code-editor textarea",
+      ) as HTMLTextAreaElement;
+      const code = codeElement.value;
       const outputArea = cell.querySelector(".output-area") as HTMLElement;
       const outputCode = cell.querySelector(".output-code") as HTMLElement;
       if (!outputArea || !outputCode) return;
-
-      const output = simulateExecution();
-      outputCode.textContent = output;
-
-      updateOutputVisibility(cell);
+      try {
+        const response = await fetch("/kernel", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ code: code, kernel_id: kernelId }),
+        });
+        const data = await response.json();
+        outputCode.textContent = JSON.stringify(data);
+        updateOutputVisibility(cell);
+      } catch (error) {
+        console.error("Error executing code:", error);
+        outputCode.textContent = "Error executing code.";
+        updateOutputVisibility(cell);
+      }
     });
   });
 
