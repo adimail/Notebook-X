@@ -12,20 +12,6 @@ class Notebook {
     setupEventListeners();
     this.editorContainer = document.getElementById("editor-container");
     this.saveIndicator = document.getElementById("save-indicator");
-    document
-      .querySelectorAll<HTMLTextAreaElement>(".input-code")
-      .forEach((textarea) => {
-        const adjustHeight = (el: HTMLTextAreaElement) => {
-          el.style.height = "auto"; // Reset height to recalculate scrollHeight
-          el.style.height = `${el.scrollHeight}px`; // Set height to fit content
-        };
-
-        textarea.addEventListener("input", () => {
-          requestAnimationFrame(() => adjustHeight(textarea)); // Ensure browser updates before measurement
-        });
-
-        adjustHeight(textarea);
-      });
   }
 
   async loadAndRender() {
@@ -34,6 +20,7 @@ class Notebook {
       const notebookData: RenderedNotebookData = await this.fetchNotebook(path);
       this.renderNotebook(notebookData);
       this.setupSaveIndicator();
+      this.setupTextareaAutoResize();
     } catch (error) {
       console.error("Error loading notebook:", error);
     }
@@ -142,6 +129,33 @@ class Notebook {
       return `<pre class="output-code error-output"><code>${DOMPurify.sanitize(Array.isArray(output.traceback) ? output.traceback.join("\n") : String(output.traceback))}</code></pre>`;
     }
     return "";
+  }
+
+  // =====================================
+  // Textarea Auto Resize Logic
+  // =====================================
+
+  private setupTextareaAutoResize(): void {
+    document
+      .querySelectorAll<HTMLTextAreaElement>(".input-code")
+      .forEach((textarea) => {
+        const adjustHeight = (el: HTMLTextAreaElement) => {
+          el.style.height = "auto";
+          el.style.height = `${el.scrollHeight}px`;
+        };
+
+        const adjustOnChange = () => {
+          requestAnimationFrame(() => {
+            setTimeout(() => adjustHeight(textarea), 0);
+          });
+        };
+
+        textarea.addEventListener("input", adjustOnChange);
+        textarea.addEventListener("focus", adjustOnChange);
+        textarea.addEventListener("paste", adjustOnChange);
+
+        adjustHeight(textarea);
+      });
   }
 
   // =========================================================

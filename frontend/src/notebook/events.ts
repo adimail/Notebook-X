@@ -82,4 +82,16 @@ export function setupEventListeners() {
       if (cell) toggleMarkdownEdit(cell);
     }
   });
+
+  document.body.addEventListener("dblclick", (event) => {
+    const target = event.target as HTMLElement;
+    const markdownContainer = target.closest(
+      ".rendered-markdown",
+    ) as HTMLElement;
+
+    if (markdownContainer) {
+      const cell = markdownContainer.closest(".cell-container") as HTMLElement;
+      if (cell) toggleMarkdownEdit(cell);
+    }
+  });
 }

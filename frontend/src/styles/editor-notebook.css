@@ -46,11 +46,11 @@
 .rendered-markdown {
   background-color: var(--editor-markdown-bg) !important;
   padding: 6px;
-  border: 1px solid transparent !important;
+  border: 0.7px solid transparent !important;
 }
 
 .rendered-markdown:hover {
-  border: 1px solid var(--border-color) !important;
+  border: 0.7px solid var(--border-color) !important;
 }
 
 .execution-count {
@@ -111,11 +111,28 @@ textarea:focus {
 .output-area {
   background-color: var(--editor-markdown-bg) !important;
   padding: 6px;
-  border: 1px solid transparent !important;
+  border: 0.7px solid transparent !important;
+  overflow-x: auto;
+}
+
+.output-area::-webkit-scrollbar {
+  height: 4px;
+}
+
+.output-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.output-area::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.output-area::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .output-area:hover {
-  border: 1px solid var(--border-color) !important;
+  border: 0.7px solid var(--border-color) !important;
 }
 
 .input-code,
