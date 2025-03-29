@@ -5,7 +5,7 @@ import {
   moveCellUp,
   moveCellDown,
   duplicateCell,
-  editMarkdownCell,
+  toggleMarkdownEdit,
   saveNotebook,
   undoAction,
   resetNotebook,
@@ -41,14 +41,16 @@ export function setupEventListeners() {
     .querySelectorAll<HTMLTextAreaElement>(".input-code")
     .forEach((textarea) => {
       const adjustHeight = (el: HTMLTextAreaElement) => {
-        el.style.height = "auto";
-        el.style.height = `${el.scrollHeight - 22}px`;
+        const lineCount = el.value.split("\n").length;
+        const computedStyle = window.getComputedStyle(el);
+        let lineHeight = parseFloat(computedStyle.lineHeight);
+        if (isNaN(lineHeight)) {
+          lineHeight = 1.4 * parseFloat(computedStyle.fontSize);
+        }
+        el.style.height = `${lineCount * lineHeight}px`;
       };
 
-      textarea.addEventListener("input", function () {
-        adjustHeight(this as HTMLTextAreaElement);
-      });
-
+      textarea.addEventListener("input", () => adjustHeight(textarea));
       adjustHeight(textarea);
     });
 
@@ -109,11 +111,17 @@ export function setupEventListeners() {
   });
 
   document.querySelectorAll(".edit-markdown-btn").forEach((button) => {
+    if (!(button instanceof HTMLElement)) return;
+
     button.addEventListener("click", () => {
-      const cellElement = (button as HTMLElement).closest(
-        ".cell",
-      ) as HTMLElement;
-      editMarkdownCell(cellElement);
+      const cellElement = button.closest(".cell-container");
+      if (!(cellElement instanceof HTMLElement)) {
+        console.error(
+          "No parent .cell-container found for markdown edit button",
+        );
+        return;
+      }
+      toggleMarkdownEdit(cellElement);
     });
   });
 

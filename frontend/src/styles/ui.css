@@ -26,3 +26,7 @@ footer a {
 main {
   margin-bottom: 50px;
 }
+
+.hidden {
+  display: none;
+}

@@ -1,0 +1,27 @@
+/*
+  Custom NotebookX Stylesheet
+  ----------------------------
+
+  This file allows you to customize the appearance of your NotebookX outputs.
+  You can modify the styles for text outputs, code cells, execution results,
+  and other notebook elements.
+
+  How to Use:
+  - Define styles for `.notebook-output` to customize how outputs appear.
+  - Use `.code-cell` to modify the appearance of code cells.
+  - Target `.execution-result` to style the results of executed cells.
+  - Add custom fonts, colors, or layouts as needed.
+
+  Example:
+  .notebook-output {
+      font-family: 'Courier New', monospace;
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 5px;
+  }
+
+  Save this file and apply it via the NotebookX settings or by placing it
+  in the appropriate directory.
+
+  Happy styling!
+*/

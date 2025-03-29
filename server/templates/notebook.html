@@ -24,7 +24,9 @@
         </div>
         <div class="notebook">
             {% for cell in cells %}
-                <div class="cell-container">
+                <div class="cell-container"
+                     id="cell-{{ cell.id }}"
+                     data-source="{{ cell['source'] }}">
                     {% if cell['cell_type'] == 'code' %}
                         <div class="cell-toolbar">
                             <button class="run-btn">Run</button>
@@ -76,8 +78,10 @@
                         <div class="nb-container">
                             <span class="execution-count"></span>
                             <div class="cell markdown-cell">
+                                <div class="input-area hidden">
+                                    <textarea class="input-code">{{ cell['source'] }}</textarea>
+                                </div>
                                 <div class="rendered-markdown">{{ cell['source'] }}</div>
-                                <textarea class="markdown-editor"></textarea>
                             </div>
                         </div>
                     {% end %}

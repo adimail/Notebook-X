@@ -1,0 +1,77 @@
+/*
+  Custom NotebookX Stylesheet
+  ----------------------------
+
+  This file allows you to customize the appearance of your NotebookX outputs,
+  including rendered Markdown, code cells, and execution results.
+
+  How to Use:
+  - Use `.rendered-markdown` to style Markdown outputs.
+  - Target `.rendered-markdown a` to modify links in Markdown cells.
+  - Customize lists using `.rendered-markdown ul li` and `.rendered-markdown ol li`.
+  - Adjust heading styles with `.rendered-markdown h1, h2, h3, etc.`.
+  - Modify inline code using `.rendered-markdown code`.
+  - Style blockquotes with `.rendered-markdown blockquote`.
+
+  Example:
+  .rendered-markdown {
+      font-size: 16px;
+      line-height: 1.6;
+  }
+
+  .rendered-markdown a {
+      color: #007bff;
+      text-decoration: underline;
+  }
+
+  .rendered-markdown ul li {
+      list-style-type: square;
+  }
+
+  .rendered-markdown blockquote {
+      border-left: 4px solid #ccc;
+      padding-left: 10px;
+      color: #555;
+  }
+
+  Save this file and apply it via the NotebookX settings or place it in the appropriate directory.
+
+  Happy styling!
+*/
+
+/* Base Markdown styles */
+.rendered-markdown {
+  /* Your styles here */
+}
+
+/* Links in Markdown */
+.rendered-markdown a {
+  /* Your styles here */
+}
+
+/* Unordered list items */
+.rendered-markdown ul li {
+  /* Your styles here */
+}
+
+/* Ordered list items */
+.rendered-markdown ol li {
+  /* Your styles here */
+}
+
+/* Headings */
+.rendered-markdown h1,
+.rendered-markdown h2,
+.rendered-markdown h3 {
+  /* Your styles here */
+}
+
+/* Inline code */
+.rendered-markdown code {
+  /* Your styles here */
+}
+
+/* Blockquotes */
+.rendered-markdown blockquote {
+  /* Your styles here */
+}
