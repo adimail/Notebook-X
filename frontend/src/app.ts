@@ -1,5 +1,5 @@
 import "@/styles/index.css";
-import { createNotebook } from "./notebook/events";
+import { createNotebook } from "./notebook/create";
 import { getQueryParam } from "./tree/tree";
 
 document.addEventListener("DOMContentLoaded", async () => {

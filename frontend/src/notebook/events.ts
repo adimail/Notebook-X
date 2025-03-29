@@ -1,7 +1,15 @@
 import { CodeCell } from "@/cells/code";
 import { MarkdownCell } from "@/cells/markdown";
 
+/**
+ * Sets up all event listeners required for notebook functionality.
+ * - Handles code execution for code cells.
+ * - Initializes markdown cells.
+ * - Shows/hides toolbars on cell hover.
+ * - Adjusts textarea height dynamically.
+ */
 export function setupEventListeners() {
+  // Code cell execution event
   document.querySelectorAll(".code-cell .run-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const cellElement = (btn as HTMLElement).closest(".cell") as HTMLElement;
@@ -9,42 +17,13 @@ export function setupEventListeners() {
     });
   });
 
+  // Initialize Markdown cells
   document.querySelectorAll(".markdown-cell").forEach((cell) => {
     new MarkdownCell(cell as HTMLElement);
   });
-}
 
-export async function createNotebook(currentPath: string) {
-  const notebookName = prompt("Enter the name of the new notebook:");
-  if (!notebookName) return;
-
-  const notebookPath = `${currentPath ? currentPath + "/" : ""}${notebookName}.ipynb`;
-
-  try {
-    const response = await fetch(
-      `/api/notebook/create?path=${encodeURIComponent(notebookPath)}`,
-      {
-        method: "POST",
-      },
-    );
-
-    if (response.ok) {
-      location.reload();
-    } else {
-      const error = await response.json();
-      alert(`Error: ${error.message}`);
-    }
-  } catch (error) {
-    console.error("Failed to create notebook:", error);
-    alert("Failed to create notebook. Please try again.");
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const cells = document.querySelectorAll(".cell-container");
-  if (!cells) return;
-
-  cells.forEach((cell) => {
+  // Show/hide toolbar on cell hover
+  document.querySelectorAll(".cell-container").forEach((cell) => {
     if (!(cell instanceof HTMLElement)) return;
 
     const toolbar = cell.querySelector(".cell-toolbar") as HTMLElement | null;
@@ -58,4 +37,20 @@ document.addEventListener("DOMContentLoaded", () => {
       toolbar.style.opacity = "0";
     });
   });
-});
+
+  // Auto-adjust textarea height on input
+  document
+    .querySelectorAll<HTMLTextAreaElement>(".input-code")
+    .forEach((textarea) => {
+      const adjustHeight = (el: HTMLTextAreaElement) => {
+        el.style.height = "auto";
+        el.style.height = `${el.scrollHeight - 22}px`;
+      };
+
+      textarea.addEventListener("input", function () {
+        adjustHeight(this as HTMLTextAreaElement);
+      });
+
+      adjustHeight(textarea);
+    });
+}

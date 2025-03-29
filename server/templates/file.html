@@ -8,16 +8,18 @@
 {% block content %}
     <div id="editor-container">
         <div class="header">
-            <a href="/?path={{ current_path }}">back</a>
+            <div class="files-button-group">
+                <a href="/?path={{ current_path }}">
+                    <button>Back</button>
+                </a>
+                <button id="save-button">Save</button>
+                <button id="undo-button">Undo</button>
+                <button id="reset-button">Reset</button>
+            </div>
             <h2 id="file-title">
                 <span id="save-indicator" class="status-indicator saved"></span>
                 {{ title }}
             </h2>
-        </div>
-        <div class="files-button-group">
-            <button id="save-button">Save</button>
-            <button id="undo-button">Undo</button>
-            <button id="reset-button">Reset</button>
         </div>
         <textarea id="file-editor">{{ content }}</textarea>
     </div>

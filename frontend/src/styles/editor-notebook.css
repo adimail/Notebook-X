@@ -21,7 +21,6 @@
 
 .cell {
   width: 100%;
-  border-radius: var(--editor-cell-radius, 0);
   position: relative;
 }
 
@@ -31,8 +30,6 @@
   gap: var(--editor-toolbar-gap, 4px);
   margin-bottom: 6px;
   justify-content: flex-end;
-  padding: 4px;
-  border-radius: 3px;
 }
 
 .code-cell {
@@ -49,7 +46,6 @@
 .rendered-markdown {
   background-color: var(--editor-markdown-bg) !important;
   padding: 6px;
-  border-radius: 2px;
   border: 1px solid var(--bg-color) !important;
 }
 
@@ -62,15 +58,64 @@
   margin-right: 8px;
 }
 
-.input-area,
-.output-area {
-  background-color: #2a2a2a;
+textarea {
+  width: 100%;
+  resize: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: none;
+  color: azure;
+  padding: 0;
+  outline: none;
+  border: none;
+  line-height: 1.4em;
+  min-height: 20px;
+  white-space: nowrap;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+}
+
+.input-area::-webkit-scrollbar {
+  display: none;
+}
+
+textarea::-webkit-scrollbar {
+  height: 6px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+textarea:focus {
+  border: none;
+  outline: none;
+}
+
+.input-area {
+  background-color: var(--editor-code-bg);
   border: 1px solid var(--border-color);
   padding: 6px;
-  border-radius: 2px;
   max-width: 100%;
   overflow-x: auto;
-  overflow-y: auto;
+}
+
+.output-area {
+  background-color: var(--editor-markdown-bg) !important;
+  padding: 6px;
+  border: 1px solid var(--bg-color) !important;
+}
+
+.output-area:hover {
+  border: 1px solid var(--border-color) !important;
 }
 
 .input-code,
@@ -105,9 +150,8 @@
   display: none;
   margin-top: 4px;
   border: 1px solid var(--border-color);
-  border-radius: 2px;
   padding: 6px;
-  background-color: #1e1e1e;
+  background-color: var(--bg-color);
   color: #e0e0e0;
 }
 
@@ -135,7 +179,6 @@
   cursor: pointer;
   background-color: var(--editor-run-btn-bg);
   border: 1px solid #333;
-  border-radius: 3px;
   font-size: 0.8rem;
   padding: 2px 6px;
   color: #fff;

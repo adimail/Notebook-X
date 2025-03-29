@@ -4,7 +4,7 @@ class Notebook {
   private kernelId: string | null = null;
 
   async initialize() {
-    await this.fetchKernelId();
+    //await this.fetchKernelId();
     setupEventListeners();
   }
 
