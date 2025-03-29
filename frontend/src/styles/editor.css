@@ -9,3 +9,9 @@
   background-color: var(--bg-color);
   z-index: 999;
 }
+
+.cm-editor {
+  height: auto;
+  min-height: 18px;
+  font-size: 14px;
+}

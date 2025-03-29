@@ -2,11 +2,14 @@ import { setupEventListeners } from "./events";
 import { RenderedNotebookData, NotebookCell, CellOutput } from "@/types";
 import { notebookxMarkdownRender } from "@/notebook/render";
 import DOMPurify from "dompurify";
+import { EditorView, basicSetup } from "codemirror";
+import { python } from "@codemirror/lang-python";
 
 class Notebook {
   private originalContent: string[] = [];
   private saveIndicator: HTMLElement | null = null;
   private editorContainer: HTMLElement | null = null;
+  private editors: Map<string, EditorView> = new Map();
 
   async initialize(): Promise<void> {
     setupEventListeners();
@@ -50,6 +53,7 @@ class Notebook {
         ${notebookData.cells.map((cell: NotebookCell) => this.renderCell(cell)).join("")}
       </div>
     `;
+    this.initializeCodeEditors();
   }
 
   renderCell(cell: NotebookCell): string {
@@ -107,6 +111,26 @@ class Notebook {
         </div>
       `;
     }
+  }
+
+  private initializeCodeEditors(): void {
+    if (!this.editorContainer) return;
+    const codeCells = this.editorContainer.querySelectorAll(
+      ".code-cell .input-area textarea",
+    );
+    codeCells.forEach((textarea: Element) => {
+      const parent = textarea.parentElement as HTMLElement;
+      const cellContainer = parent.closest(".cell-container") as HTMLElement;
+      const cellId = cellContainer.id;
+
+      const editor = new EditorView({
+        doc: (textarea as HTMLTextAreaElement).value,
+        extensions: [basicSetup, python()],
+        parent,
+      });
+      this.editors.set(cellId, editor);
+      textarea.remove();
+    });
   }
 
   renderOutput(output: CellOutput): string {

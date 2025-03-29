@@ -29,6 +29,10 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
+    "@codemirror/lang-python": "^6.1.7",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.36.5",
+    "codemirror": "^6.0.1",
     "commonmark": "^0.31.2",
     "dompurify": "^3.2.4"
   }
