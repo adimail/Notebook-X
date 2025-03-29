@@ -16,17 +16,15 @@ import {
  * Sets up all event listeners required for notebook functionality.
  */
 export function setupEventListeners() {
-  document.querySelectorAll(".code-cell .run-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const cellElement = (btn as HTMLElement).closest(".cell") as HTMLElement;
-      runCodeCell(cellElement);
-    });
-  });
-
   document.querySelectorAll(".markdown-cell").forEach((cell) => {
     new MarkdownCell(cell as HTMLElement);
   });
 
+  // =========================================================
+  //
+  // Input cell UI logic
+  //
+  // =========================================================
   document.querySelectorAll(".cell-container").forEach((cell) => {
     if (!(cell instanceof HTMLElement)) return;
 
@@ -65,68 +63,54 @@ export function setupEventListeners() {
     .getElementById("new-cell-button")
     ?.addEventListener("click", createNewCell);
 
-  document.querySelectorAll(".run-btn").forEach((button) => {
-    button.addEventListener("click", () => {
-      const cellElement = (button as HTMLElement).closest(
-        ".cell",
-      ) as HTMLElement;
-      runCodeCell(cellElement);
-    });
+  // =========================================================
+  //
+  // Cell container toolbar
+  //
+  // Run, Edit/save (markdown), Move up, Move down, Duplicate, Delete
+  //
+  // =========================================================
+
+  document.body.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement;
+
+    if (target.matches(".run-btn")) {
+      const cell = target.closest(".cell-container") as HTMLElement;
+      if (cell) runCodeCell(cell);
+    }
+
+    if (target.matches(".delete-btn")) {
+      const cell = target.closest(".cell-container") as HTMLElement;
+      if (cell) deleteCell(cell);
+    }
+
+    if (target.matches(".move-up-btn")) {
+      const cell = target.closest(".cell-container") as HTMLElement;
+      if (cell) moveCellUp(cell);
+    }
+
+    if (target.matches(".move-down-btn")) {
+      const cell = target.closest(".cell-container") as HTMLElement;
+      if (cell) moveCellDown(cell);
+    }
+
+    if (target.matches(".duplicate-btn")) {
+      const cell = target.closest(".cell-container") as HTMLElement;
+      if (cell) duplicateCell(cell);
+    }
+
+    if (target.matches(".edit-markdown-btn")) {
+      const cell = target.closest(".cell-container") as HTMLElement;
+      if (cell) toggleMarkdownEdit(cell);
+    }
   });
 
-  document.querySelectorAll(".delete-btn").forEach((button) => {
-    button.addEventListener("click", () => {
-      const cellElement = (button as HTMLElement).closest(
-        ".cell",
-      ) as HTMLElement;
-      deleteCell(cellElement);
-    });
-  });
-
-  document.querySelectorAll(".move-up-btn").forEach((button) => {
-    button.addEventListener("click", () => {
-      const cellElement = (button as HTMLElement).closest(
-        ".cell",
-      ) as HTMLElement;
-      moveCellUp(cellElement);
-    });
-  });
-
-  document.querySelectorAll(".move-down-btn").forEach((button) => {
-    button.addEventListener("click", () => {
-      const cellElement = (button as HTMLElement).closest(
-        ".cell",
-      ) as HTMLElement;
-      moveCellDown(cellElement);
-    });
-  });
-
-  document.querySelectorAll(".duplicate-btn").forEach((button) => {
-    button.addEventListener("click", () => {
-      const cellElement = (button as HTMLElement).closest(
-        ".cell",
-      ) as HTMLElement;
-      duplicateCell(cellElement);
-    });
-  });
-
-  document.querySelectorAll(".edit-markdown-btn").forEach((button) => {
-    if (!(button instanceof HTMLElement)) return;
-
-    button.addEventListener("click", () => {
-      const cellElement = button.closest(".cell-container");
-      if (!(cellElement instanceof HTMLElement)) {
-        console.error(
-          "No parent .cell-container found for markdown edit button",
-        );
-        return;
-      }
-      toggleMarkdownEdit(cellElement);
-    });
-  });
-
-  // Save indicator
+  // =========================================================
+  //
   // Save indicator logic
+  //
+  // =========================================================
+
   const editorContainer = document.getElementById(
     "editor-container",
   ) as HTMLElement;
@@ -157,12 +141,9 @@ export function setupEventListeners() {
     updateSaveIndicator(isSaved);
   }
 
-  function attachEventListeners() {
-    document.querySelectorAll("textarea").forEach((textarea) => {
-      textarea.addEventListener("input", checkForChanges);
-    });
-  }
-
   storeOriginalContent();
-  attachEventListeners();
+
+  document.querySelectorAll("textarea").forEach((textarea) => {
+    textarea.addEventListener("input", checkForChanges);
+  });
 }

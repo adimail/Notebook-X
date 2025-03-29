@@ -3,6 +3,9 @@ export interface CellOutput {
   output_type: string;
   text?: string[];
   [key: string]: any;
+  data?: Record<string, any>;
+  execution_count?: number;
+  metadata?: Record<string, any>;
 }
 
 export interface NotebookCell {
@@ -12,6 +15,7 @@ export interface NotebookCell {
   metadata: Record<string, any>;
   outputs?: CellOutput[];
   source: string[];
+  last_modified?: number;
 }
 
 export interface KernelSpec {
@@ -53,4 +57,13 @@ export interface DirectoryItem {
   lastModified?: number;
   type?: string;
   children?: DirectoryItem[];
+}
+
+/**
+ * Represents the real-time state of the notebook in the frontend.
+ */
+export interface NotebookState {
+  notebook: Notebook;
+  activeCellId?: string;
+  unsavedChanges: boolean;
 }
