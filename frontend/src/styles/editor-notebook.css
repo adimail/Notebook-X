@@ -41,8 +41,20 @@
 }
 
 .markdown-cell {
-  color: var(--text-color, #e0e0e0);
+  background-color: var(--editor-markdown-bg) !important;
+  color: var(--text-color);
   font-family: var(--editor-font-family-md, Arial, sans-serif);
+}
+
+.rendered-markdown {
+  background-color: var(--editor-markdown-bg) !important;
+  padding: 6px;
+  border-radius: 2px;
+  border: 1px solid var(--bg-color) !important;
+}
+
+.rendered-markdown:hover {
+  border: 1px solid var(--border-color) !important;
 }
 
 .execution-count {
@@ -53,7 +65,7 @@
 .input-area,
 .output-area {
   background-color: #2a2a2a;
-  border: 1px solid var(--border-color, #444);
+  border: 1px solid var(--border-color);
   padding: 6px;
   border-radius: 2px;
   max-width: 100%;
@@ -80,15 +92,9 @@
   opacity: 0;
   transition: opacity 0.3s ease;
 }
+
 .cell-container:hover .cell-toolbar {
   opacity: 1;
-}
-
-.rendered-markdown {
-  background-color: #2a2a2a;
-  padding: 6px;
-  border-radius: 2px;
-  border: 1px solid var(--border-color, #444);
 }
 
 .markdown-editor {
@@ -98,7 +104,7 @@
   font-family: var(--editor-font-family-md, Arial, sans-serif);
   display: none;
   margin-top: 4px;
-  border: 1px solid var(--border-color, #444);
+  border: 1px solid var(--border-color);
   border-radius: 2px;
   padding: 6px;
   background-color: #1e1e1e;
@@ -127,13 +133,13 @@
 .duplicate-btn,
 .delete-btn {
   cursor: pointer;
-  background-color: var(--editor-run-btn-bg, #424242);
+  background-color: var(--editor-run-btn-bg);
   border: 1px solid #333;
   border-radius: 3px;
   font-size: 0.8rem;
   padding: 2px 6px;
   color: #fff;
-  transition: background-color var(--transition-speed, 0.3s);
+  transition: background-color var(--transition-speed);
 }
 
 .run-btn:hover,
@@ -142,7 +148,7 @@
 .move-down-btn:hover,
 .duplicate-btn:hover,
 .delete-btn:hover {
-  background-color: var(--editor-run-btn-hover-bg, #616161);
+  background-color: var(--editor-run-btn-hover-bg);
 }
 
 .output-area:empty {

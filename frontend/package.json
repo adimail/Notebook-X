@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/adimail/Notebook-X#readme",
   "devDependencies": {
+    "@types/commonmark": "^0.27.9",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.2",
     "mini-css-extract-plugin": "^2.9.2",
@@ -26,5 +27,9 @@
     "typescript": "^5.8.2",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "commonmark": "^0.31.2",
+    "dompurify": "^3.2.4"
   }
 }

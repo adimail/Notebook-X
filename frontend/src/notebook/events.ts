@@ -1,4 +1,5 @@
 import { CodeCell } from "@/cells/code";
+import { MarkdownCell } from "@/cells/markdown";
 
 export function setupEventListeners() {
   document.querySelectorAll(".code-cell .run-btn").forEach((btn) => {
@@ -6,6 +7,10 @@ export function setupEventListeners() {
       const cellElement = (btn as HTMLElement).closest(".cell") as HTMLElement;
       new CodeCell(cellElement).execute();
     });
+  });
+
+  document.querySelectorAll(".markdown-cell").forEach((cell) => {
+    new MarkdownCell(cell as HTMLElement);
   });
 }
 
@@ -37,7 +42,6 @@ export async function createNotebook(currentPath: string) {
 
 document.addEventListener("DOMContentLoaded", () => {
   const cells = document.querySelectorAll(".cell-container");
-
   if (!cells) return;
 
   cells.forEach((cell) => {

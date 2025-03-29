@@ -5,6 +5,7 @@ export class MarkdownCell extends Cell {
   constructor(element: HTMLElement) {
     super(element);
     this.setupEditor();
+    this.renderMarkdown();
   }
 
   private setupEditor() {
@@ -33,6 +34,15 @@ export class MarkdownCell extends Cell {
         editBtn.textContent = "Edit";
       }
     });
+  }
+
+  private renderMarkdown() {
+    const renderedArea = this.element.querySelector(
+      ".rendered-markdown",
+    ) as HTMLElement;
+    if (renderedArea) {
+      renderedArea.innerHTML = notebookxMarkdownRender(renderedArea.innerText);
+    }
   }
 
   execute() {}
