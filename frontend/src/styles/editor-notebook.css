@@ -46,7 +46,7 @@
 .rendered-markdown {
   background-color: var(--editor-markdown-bg) !important;
   padding: 6px;
-  border: 1px solid var(--bg-color) !important;
+  border: 1px solid transparent !important;
 }
 
 .rendered-markdown:hover {
@@ -111,7 +111,7 @@ textarea:focus {
 .output-area {
   background-color: var(--editor-markdown-bg) !important;
   padding: 6px;
-  border: 1px solid var(--bg-color) !important;
+  border: 1px solid transparent !important;
 }
 
 .output-area:hover {

@@ -6,87 +6,20 @@
     {% include "toolbar.html" %}
 {% end %}
 {% block content %}
-    <div id="editor-container">
-        <div class="header">
-            <div class="files-button-group">
-                <a href="/?path={{ current_path }}">
-                    <button>Back</button>
-                </a>
-                <button id="save-button">Save</button>
-                <button id="undo-button">Undo</button>
-                <button id="reset-button">Reset</button>
-                <button id="new-cell-button">New Cell</button>
-            </div>
-            <h2 id="file-title">
-                <span id="save-indicator" class="status-indicator saved"></span>
-                {{ title }}
-            </h2>
+    <div class="header notebook-editor-header">
+        <div class="files-button-group">
+            <a href="/?path={{ current_path }}">
+                <button>Back</button>
+            </a>
+            <button id="save-button">Save</button>
+            <button id="undo-button">Undo</button>
+            <button id="reset-button">Reset</button>
+            <button id="new-cell-button">New Cell</button>
         </div>
-        <div class="notebook">
-            {% for cell in cells %}
-                <div class="cell-container"
-                     id="cell-{{ cell.id }}"
-                     data-source="{{ cell['source'] }}">
-                    {% if cell['cell_type'] == 'code' %}
-                        <div class="cell-toolbar">
-                            <button class="run-btn">Run</button>
-                            <button class="move-up-btn">▲</button>
-                            <button class="move-down-btn">▼</button>
-                            <button class="duplicate-btn">Duplicate</button>
-                            <button class="delete-btn">Delete</button>
-                        </div>
-                        <div class="nb-container">
-                            <span class="execution-count">[{{ cell['execution_count'] if cell['execution_count'] else '' }}]</span>
-                            <div class="cell code-cell">
-                                <div class="input-area">
-                                    <textarea class="input-code">{{ cell['source'] }}</textarea>
-                                </div>
-                                {% if cell.outputs %}
-                                    <div class="output-area">
-                                        {% for output in cell.outputs %}
-                                            {% if output.output_type == "stream" %}
-                                                <pre class="output-code stream-output"><code>{{ output.text }}</code></pre>
-                                            {% elif output.output_type == "display_data" or output.output_type == "execute_result" %}
-                                                {% if "text/html" in output.data %}
-                                                    <div class="output-html">{{ output.data["text/html"] }}</div>
-                                                {% elif "image/png" in output.data %}
-                                                    <img class="output-image"
-                                                         src="data:image/png;base64,{{ output.data['image/png'] }}" />
-                                                {% elif "text/plain" in output.data %}
-                                                    <pre class="output-code output-html"><code>{{ output.data["text/plain"] }}</code></pre>
-                                                {% else %}
-                                                    <pre class="output-code"><code>Unknown output format</code></pre>
-                                                {% end %}
-                                            {% elif output.output_type == "error" %}
-                                                <pre class="output-code error-output">
-                                                    <code>{{ output.traceback | join("\n") }}</code>
-                                                </pre>
-                                            {% end %}
-                                        {% end %}
-                                    </div>
-                                {% end %}
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="cell-toolbar">
-                            <button class="edit-markdown-btn">Edit</button>
-                            <button class="move-up-btn">▲</button>
-                            <button class="move-down-btn">▼</button>
-                            <button class="duplicate-btn">Duplicate</button>
-                            <button class="delete-btn">Delete</button>
-                        </div>
-                        <div class="nb-container">
-                            <span class="execution-count"></span>
-                            <div class="cell markdown-cell">
-                                <div class="input-area hidden">
-                                    <textarea class="input-code">{{ cell['source'] }}</textarea>
-                                </div>
-                                <div class="rendered-markdown">{{ cell['source'] }}</div>
-                            </div>
-                        </div>
-                    {% end %}
-                </div>
-            {% end %}
-        </div>
+        <h2 id="file-title">
+            <span id="save-indicator" class="status-indicator saved"></span>
+            {{ title }}
+        </h2>
     </div>
+    <div id="editor-container"></div>
 {% end %}

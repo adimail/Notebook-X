@@ -1,3 +1,4 @@
+// types.ts
 export interface CellOutput {
   name?: string;
   output_type: string;
@@ -48,6 +49,11 @@ export interface Notebook {
   metadata: NotebookMetadata;
   nbformat: number;
   nbformat_minor: number;
+}
+
+export interface RenderedNotebookData extends Notebook {
+  current_path: string;
+  title: string;
 }
 
 export interface DirectoryItem {

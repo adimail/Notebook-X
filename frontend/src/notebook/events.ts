@@ -1,4 +1,3 @@
-import { MarkdownCell } from "@/cells/markdown";
 import {
   runCodeCell,
   deleteCell,
@@ -16,10 +15,6 @@ import {
  * Sets up all event listeners required for notebook functionality.
  */
 export function setupEventListeners() {
-  document.querySelectorAll(".markdown-cell").forEach((cell) => {
-    new MarkdownCell(cell as HTMLElement);
-  });
-
   // =========================================================
   //
   // Input cell UI logic
@@ -34,23 +29,6 @@ export function setupEventListeners() {
     cell.addEventListener("mouseenter", () => (toolbar.style.opacity = "1"));
     cell.addEventListener("mouseleave", () => (toolbar.style.opacity = "0"));
   });
-
-  document
-    .querySelectorAll<HTMLTextAreaElement>(".input-code")
-    .forEach((textarea) => {
-      const adjustHeight = (el: HTMLTextAreaElement) => {
-        const lineCount = el.value.split("\n").length;
-        const computedStyle = window.getComputedStyle(el);
-        let lineHeight = parseFloat(computedStyle.lineHeight);
-        if (isNaN(lineHeight)) {
-          lineHeight = 1.4 * parseFloat(computedStyle.fontSize);
-        }
-        el.style.height = `${lineCount * lineHeight}px`;
-      };
-
-      textarea.addEventListener("input", () => adjustHeight(textarea));
-      adjustHeight(textarea);
-    });
 
   document
     .getElementById("save-button")
@@ -103,47 +81,5 @@ export function setupEventListeners() {
       const cell = target.closest(".cell-container") as HTMLElement;
       if (cell) toggleMarkdownEdit(cell);
     }
-  });
-
-  // =========================================================
-  //
-  // Save indicator logic
-  //
-  // =========================================================
-
-  const editorContainer = document.getElementById(
-    "editor-container",
-  ) as HTMLElement;
-  const saveIndicator = document.getElementById(
-    "save-indicator",
-  ) as HTMLElement;
-
-  let originalContent: string[] = [];
-
-  function updateSaveIndicator(saved: boolean) {
-    saveIndicator.classList.toggle("saved", saved);
-    saveIndicator.classList.toggle("unsaved", !saved);
-  }
-
-  function storeOriginalContent() {
-    originalContent = Array.from(
-      editorContainer.querySelectorAll("textarea"),
-    ).map((textarea) => (textarea as HTMLTextAreaElement).value);
-    updateSaveIndicator(true);
-  }
-
-  function checkForChanges() {
-    const currentContent = Array.from(
-      editorContainer.querySelectorAll("textarea"),
-    ).map((textarea) => (textarea as HTMLTextAreaElement).value);
-    const isSaved =
-      JSON.stringify(originalContent) === JSON.stringify(currentContent);
-    updateSaveIndicator(isSaved);
-  }
-
-  storeOriginalContent();
-
-  document.querySelectorAll("textarea").forEach((textarea) => {
-    textarea.addEventListener("input", checkForChanges);
   });
 }

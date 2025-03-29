@@ -30,3 +30,7 @@ main {
 .hidden {
   display: none;
 }
+
+hr {
+  margin-bottom: 20px;
+}

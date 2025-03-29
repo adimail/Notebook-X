@@ -1,4 +1,5 @@
 import os
+import json
 import tornado.web
 import nbformat
 from nbformat.v4 import new_notebook, new_code_cell, new_markdown_cell, new_notebook
@@ -104,6 +105,36 @@ class NotebookHandler(BaseHandler):
                     ).isoformat(),
                 }
         return None
+
+
+def read_notebook(path):
+    """Reads a Jupyter notebook file and returns it as a JSON object."""
+    with open(path, "r", encoding="utf-8") as f:
+        return nbformat.read(f, as_version=4)
+
+
+class LoadNotebookHandler(BaseHandler):
+    def get(self):
+        """Handles GET request to load a notebook"""
+        notebook_path = self.get_argument("path", None)
+
+        if not notebook_path:
+            self.set_status(400)
+            self.write({"error": "Missing 'path' query parameter."})
+            return
+
+        if not os.path.exists(notebook_path) or not notebook_path.endswith(".ipynb"):
+            self.set_status(404)
+            self.write({"error": "Notebook not found or invalid path."})
+            return
+
+        try:
+            notebook_data = read_notebook(notebook_path)
+            self.set_header("Content-Type", "application/json")
+            self.write(json.dumps(notebook_data))
+        except Exception as e:
+            self.set_status(500)
+            self.write({"error": f"Error reading notebook: {str(e)}"})
 
 
 class CreateNotebookHandler(BaseHandler):
