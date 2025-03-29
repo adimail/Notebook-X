@@ -103,14 +103,12 @@ textarea:focus {
 .input-area {
   background-color: var(--editor-code-bg);
   border: 1px solid var(--border-color);
-  padding: 6px;
   max-width: 100%;
   overflow-x: auto;
 }
 
 .output-area {
   background-color: var(--editor-markdown-bg) !important;
-  padding: 6px;
   border: 0.7px solid transparent !important;
   overflow-x: auto;
 }

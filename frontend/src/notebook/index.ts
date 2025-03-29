@@ -4,6 +4,7 @@ import { notebookxMarkdownRender } from "@/notebook/render";
 import DOMPurify from "dompurify";
 import { EditorView, basicSetup } from "codemirror";
 import { python } from "@codemirror/lang-python";
+import { gruvboxDark } from "@/themes";
 
 class Notebook {
   private originalContent: string[] = [];
@@ -125,7 +126,7 @@ class Notebook {
 
       const editor = new EditorView({
         doc: (textarea as HTMLTextAreaElement).value,
-        extensions: [basicSetup, python()],
+        extensions: [basicSetup, python(), ...gruvboxDark],
         parent,
       });
       this.editors.set(cellId, editor);
