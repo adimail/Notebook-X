@@ -3,7 +3,7 @@ build:
 	cd frontend && npm run build
 
 run:
-	python3 run.py
+	python3 server/run.py
 
 dev:
 	@echo "Starting dev server..."
@@ -30,4 +30,4 @@ start:
 	@echo "Building frontend..."
 	cd frontend && npm run build
 	@echo "Starting application..."
-	. venv/bin/activate && python3 run.py
+	. venv/bin/activate && python3 server/run.py

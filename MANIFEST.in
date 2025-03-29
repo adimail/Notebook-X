@@ -1,0 +1,3 @@
+include README.md
+recursive-include server *
+recursive-include frontend/dist *

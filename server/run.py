@@ -33,7 +33,8 @@ INTRO = """
 
 """
 
-if __name__ == "__main__":
+
+def main():
     app = make_app()
     app.listen(8888)
 
@@ -49,3 +50,7 @@ if __name__ == "__main__":
         loop.run_forever()
     except KeyboardInterrupt:
         shutdown(loop)
+
+
+if __name__ == "__main__":
+    main()

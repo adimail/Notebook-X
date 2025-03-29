@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "notebookx"
+version = "0.1.0"
+description = "A lightweight python notebook"
+authors = [{ name = "Aditya Godse", email = "adimail2404@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "tornado",
+    "pyzmq",
+    "pre-commit",
+    "ipykernel",
+    "nbformat",
+]
+
+[project.urls]
+Homepage = "https://github.com/adimail/Notebook-X"
+Documentation = "https://adimail.github.io/Notebook-X"
+
+[project.scripts]
+notebookx = "server.run:main"
+
+[tool.setuptools]
+packages = ["server", "kernels", "frontend", "config"]
