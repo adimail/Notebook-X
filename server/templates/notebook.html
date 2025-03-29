@@ -16,8 +16,8 @@
         </div>
         <div class="notebook">
             {% for cell in cells %}
-                {% if cell['cell_type'] == 'code' %}
-                    <div class="cell code-cell">
+                <div class="cell-container">
+                    {% if cell['cell_type'] == 'code' %}
                         <div class="cell-toolbar">
                             <button class="run-btn">Run</button>
                             <button class="move-up-btn">▲</button>
@@ -25,39 +25,39 @@
                             <button class="duplicate-btn">Duplicate</button>
                             <button class="delete-btn">Delete</button>
                         </div>
-                        <div class="input-area">
+                        <div class="nb-container">
                             <span class="execution-count">[{{ cell['execution_count'] if cell['execution_count'] else '' }}]</span>
-                            <pre class="input-code"><code>{{ cell['source'] }}</code></pre>
-                        </div>
-                        <div class="output-area">
-                            {% if cell.outputs %}
-                                {% for output in cell.outputs %}
-                                    {% if output.output_type == "stream" %}
-                                        <pre class="output-code stream-output"><code>{{ output.text }}</code></pre>
-                                    {% elif output.output_type == "display_data" or output.output_type == "execute_result" %}
-                                        {% if "text/html" in output.data %}
-                                            <div class="output-html">{{ output.data["text/html"] }}</div>
-                                        {% elif "image/png" in output.data %}
-                                            <img class="output-image"
-                                                 src="data:image/png;base64,{{ output.data['image/png'] }}" />
-                                        {% elif "text/plain" in output.data %}
-                                            <pre class="output-code output-html"><code>{{ output.data["text/plain"] }}</code></pre>
-                                        {% else %}
-                                            <pre class="output-code"><code>Unknown output format</code></pre>
+                            <div class="cell code-cell">
+                                <div class="input-area">
+                                    <pre class="input-code"><code>{{ cell['source'] }}</code></pre>
+                                </div>
+                                {% if cell.outputs %}
+                                    <div class="output-area">
+                                        {% for output in cell.outputs %}
+                                            {% if output.output_type == "stream" %}
+                                                <pre class="output-code stream-output"><code>{{ output.text }}</code></pre>
+                                            {% elif output.output_type == "display_data" or output.output_type == "execute_result" %}
+                                                {% if "text/html" in output.data %}
+                                                    <div class="output-html">{{ output.data["text/html"] }}</div>
+                                                {% elif "image/png" in output.data %}
+                                                    <img class="output-image"
+                                                         src="data:image/png;base64,{{ output.data['image/png'] }}" />
+                                                {% elif "text/plain" in output.data %}
+                                                    <pre class="output-code output-html"><code>{{ output.data["text/plain"] }}</code></pre>
+                                                {% else %}
+                                                    <pre class="output-code"><code>Unknown output format</code></pre>
+                                                {% end %}
+                                            {% elif output.output_type == "error" %}
+                                                <pre class="output-code error-output">
+                                                    <code>{{ output.traceback | join("\n") }}</code>
+                                                </pre>
+                                            {% end %}
                                         {% end %}
-                                    {% elif output.output_type == "error" %}
-                                        <pre class="output-code error-output">
-                                            <code>{{ output.traceback | join("\n") }}</code>
-                                        </pre>
-                                    {% end %}
+                                    </div>
                                 {% end %}
-                            {% else %}
-                                <pre class="output-code"><code></code></pre>
-                            {% end %}
+                            </div>
                         </div>
-                    </div>
-                {% else %}
-                    <div class="cell markdown-cell">
+                    {% else %}
                         <div class="cell-toolbar">
                             <button class="edit-markdown-btn">Edit</button>
                             <button class="move-up-btn">▲</button>
@@ -65,12 +65,16 @@
                             <button class="duplicate-btn">Duplicate</button>
                             <button class="delete-btn">Delete</button>
                         </div>
-                        <div class="rendered-markdown">{{ cell['source'] }}</div>
-                        <textarea class="markdown-editor"></textarea>
-                    </div>
-                {% end %}
+                        <div class="nb-container">
+                            <span class="execution-count"></span>
+                            <div class="cell markdown-cell">
+                                <div class="rendered-markdown">{{ cell['source'] }}</div>
+                                <textarea class="markdown-editor"></textarea>
+                            </div>
+                        </div>
+                    {% end %}
+                </div>
             {% end %}
         </div>
     </div>
-    {{ notebook }}
 {% end %}

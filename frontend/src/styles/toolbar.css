@@ -2,7 +2,6 @@
   background-color: var(--toolbar-bg);
   padding: 5px;
   border-bottom: 2px solid var(--border-color);
-  box-shadow: var(--box-shadow);
   display: flex;
   align-items: flex-start;
   justify-content: space-between;

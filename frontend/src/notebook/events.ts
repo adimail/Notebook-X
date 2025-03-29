@@ -34,3 +34,24 @@ export async function createNotebook(currentPath: string) {
     alert("Failed to create notebook. Please try again.");
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const cells = document.querySelectorAll(".cell-container");
+
+  if (!cells) return;
+
+  cells.forEach((cell) => {
+    if (!(cell instanceof HTMLElement)) return;
+
+    const toolbar = cell.querySelector(".cell-toolbar") as HTMLElement | null;
+    if (!toolbar) return;
+
+    cell.addEventListener("mouseenter", () => {
+      toolbar.style.opacity = "1";
+    });
+
+    cell.addEventListener("mouseleave", () => {
+      toolbar.style.opacity = "0";
+    });
+  });
+});

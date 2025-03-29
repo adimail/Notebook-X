@@ -2,26 +2,31 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--editor-notebook-padding, 8px);
-  background-color: var(--bg-color, #121212);
   color: var(--text-color, #e0e0e0);
   width: 100%;
-  max-width: 100%;
   overflow-x: auto;
+}
+
+.nb-container {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+}
+
+.nb-container .cell {
+  width: 95%;
 }
 
 .cell {
   width: 100%;
-  background-color: var(--editor-cell-bg, #1e1e1e);
-  border: 1px solid var(--editor-cell-border, #333);
-  padding: var(--editor-cell-padding, 8px);
-  margin-bottom: var(--editor-cell-padding, 8px);
   border-radius: var(--editor-cell-radius, 0);
-  box-shadow: var(--editor-box-shadow, 2px 2px 8px rgba(0, 0, 0, 0.2));
   position: relative;
 }
 
 .cell-toolbar {
+  width: 100%;
   display: flex;
   gap: var(--editor-toolbar-gap, 4px);
   margin-bottom: 6px;
@@ -31,13 +36,11 @@
 }
 
 .code-cell {
-  background-color: var(--editor-code-bg, #282c34);
   color: var(--editor-code-text, #abb2bf);
   font-family: var(--editor-font-family-code, monospace);
 }
 
 .markdown-cell {
-  background-color: var(--editor-markdown-bg, #2c2c2c);
   color: var(--text-color, #e0e0e0);
   font-family: var(--editor-font-family-md, Arial, sans-serif);
 }
@@ -53,7 +56,6 @@
   border: 1px solid var(--border-color, #444);
   padding: 6px;
   border-radius: 2px;
-  margin-top: 4px;
   max-width: 100%;
   overflow-x: auto;
   overflow-y: auto;
@@ -64,6 +66,22 @@
   margin: 0;
   font-size: var(--editor-font-size, 14px);
   line-height: 1.4em;
+}
+
+.output-area {
+  margin-top: 10px;
+}
+
+.cell-container {
+  width: 100%;
+}
+
+.cell-toolbar {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.cell-container:hover .cell-toolbar {
+  opacity: 1;
 }
 
 .rendered-markdown {
