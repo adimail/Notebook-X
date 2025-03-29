@@ -1,6 +1,6 @@
 import "@/styles/index.css";
-import { createNotebook } from "./notebook/create";
-import { getQueryParam } from "./tree/tree";
+import { createNotebook } from "@/notebook/create";
+import { getQueryParam } from "@/tree/utils";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const currentPath = getQueryParam("path") || "";

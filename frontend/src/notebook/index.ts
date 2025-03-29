@@ -1,5 +1,5 @@
 import { setupEventListeners } from "./events";
-import { RenderedNotebookData, NotebookCell, CellOutput } from "../types";
+import { RenderedNotebookData, NotebookCell, CellOutput } from "@/types";
 import { notebookxMarkdownRender } from "@/notebook/render";
 import DOMPurify from "dompurify";
 

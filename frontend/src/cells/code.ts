@@ -1,6 +1,5 @@
 import { Cell } from "./base";
-import { sendCodeExecutionRequest } from "../utils/api";
-import { updateOutputVisibility } from "../utils/dom";
+import { sendCodeExecutionRequest, updateOutputVisibility } from "@/utils";
 
 export class CodeCell extends Cell {
   async execute() {

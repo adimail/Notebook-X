@@ -1,4 +1,3 @@
-// types.ts
 export interface CellOutput {
   name?: string;
   output_type: string;

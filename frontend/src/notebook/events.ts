@@ -9,7 +9,7 @@ import {
   undoAction,
   resetNotebook,
   createNewCell,
-} from "./actions";
+} from "@/notebook/actions";
 
 /**
  * Sets up all event listeners required for notebook functionality.

@@ -1,4 +1,4 @@
-import { getQueryParam, renderDirectoryListing } from "./tree";
+import { getQueryParam, renderDirectoryListing } from "./utils";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const currentPath = getQueryParam("path");
