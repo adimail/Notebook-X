@@ -86,9 +86,7 @@ export function duplicateCell(cellId: string): string | null {
     ...originalCell,
     id: generateCellId(),
     metadata: { ...originalCell.metadata },
-    source: Array.isArray(originalCell.source)
-      ? [...originalCell.source]
-      : originalCell.source,
+    source: originalCell.source,
   };
 
   store.addCell(newCell, cellIndex + 1);
@@ -106,7 +104,7 @@ export function createCell(type: "code" | "markdown", index?: number): string {
   const newCell: NotebookCell = {
     id: generateCellId(),
     cell_type: type,
-    source: [],
+    source: "",
     metadata: {},
     ...(type === "code" && { outputs: [], execution_count: null }),
   };

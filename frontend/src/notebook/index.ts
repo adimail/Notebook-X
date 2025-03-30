@@ -19,13 +19,27 @@ class Notebook {
     this.editorContainer = document.getElementById("editor-container");
     this.saveIndicator = document.getElementById("save-indicator");
 
-    useNotebookStore.subscribe((state) => {
-      if (state.stagedChanges) {
-        console.log("stagedChanges rendered");
-        console.log(state.stagedChanges);
-        this.render(state.stagedChanges);
-      }
-    });
+    // Subscribe to stagedChanges updates
+    useNotebookStore.subscribe(
+      (state) => state.stagedChanges,
+      (stagedChanges) => {
+        if (stagedChanges) {
+          console.log("stagedChanges updated", stagedChanges);
+          updateDOMSaveIndicator(this.saveIndicator);
+        }
+      },
+    );
+
+    // Subscribe to notebook updates
+    useNotebookStore.subscribe(
+      (state) => state.notebook,
+      (notebook) => {
+        if (notebook) {
+          console.log("notebook updated", notebook);
+          this.render(notebook);
+        }
+      },
+    );
   }
 
   async loadAndRender() {

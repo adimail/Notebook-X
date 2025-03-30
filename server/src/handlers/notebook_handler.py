@@ -18,26 +18,10 @@ class NotebookHandler(BaseHandler):
             if not os.path.isfile(full_path) or not full_path.endswith(".ipynb"):
                 raise tornado.web.HTTPError(404, "Notebook not found")
 
-            with open(full_path, "r", encoding="utf-8") as f:
-                notebook = nbformat.read(f, as_version=4)
-
-            checkpoint_dir = os.path.join(
-                os.path.dirname(full_path), ".ipynb_checkpoints"
-            )
-            last_checkpoint = self._get_last_checkpoint(checkpoint_dir)
-
             self.render(
                 "notebook.html",
                 title=os.path.basename(path),
-                cells=notebook.cells,
                 current_path=os.path.dirname(path),
-                kernelspec=notebook.metadata.get("kernelspec", {}),
-                language_info=notebook.metadata.get("language_info", {}),
-                nbformat=notebook.nbformat,
-                nbformat_minor=notebook.nbformat_minor,
-                last_checkpoint=last_checkpoint,
-                metadata=notebook.metadata,
-                notebook=notebook,
             )
         except Exception as e:
             raise tornado.web.HTTPError(400, str(e))

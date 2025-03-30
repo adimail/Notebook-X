@@ -8,6 +8,7 @@ import {
 import { EditorView, basicSetup } from "codemirror";
 import { python } from "@codemirror/lang-python";
 import { gruvboxDark } from "@/themes";
+import { useNotebookStore } from "@/store";
 
 export function notebookxMarkdownRender(mdText: string): string {
   const reader = new Parser();
@@ -91,18 +92,39 @@ function initializeCodeEditors(
   const codeCells = editorContainer.querySelectorAll(
     ".code-cell .input-area textarea",
   );
+
   codeCells.forEach((textarea: Element) => {
     const parent = textarea.parentElement as HTMLElement;
     const cellContainer = parent.closest(".cell-container") as HTMLElement;
-    const cellId = cellContainer.id;
+    const cellId = cellContainer.id.replace("cell-", "");
 
     const editor = new EditorView({
       doc: (textarea as HTMLTextAreaElement).value,
-      extensions: [basicSetup, python(), ...gruvboxDark],
+      extensions: [
+        basicSetup,
+        python(),
+        ...gruvboxDark,
+        EditorView.updateListener.of((update) => {
+          if (update.docChanged) {
+            const newCode = editor.state.doc.toString();
+            useNotebookStore.getState().updateCell(cellId, { source: newCode });
+          }
+        }),
+      ],
       parent,
     });
+
     editors.set(cellId, editor);
     textarea.remove();
+  });
+
+  editorContainer.addEventListener("input", (event) => {
+    const target = event.target as HTMLTextAreaElement;
+    if (target.classList.contains("input-code")) {
+      const cellContainer = target.closest(".cell-container") as HTMLElement;
+      const cellId = cellContainer.id.replace("cell-", "");
+      useNotebookStore.getState().updateCell(cellId, { source: target.value });
+    }
   });
 }
 

@@ -3,10 +3,14 @@
  * @param currentPath - The current directory path where the notebook will be created.
  */
 export async function createNotebook(currentPath: string) {
-  const notebookName = prompt("Enter the name of the new notebook:");
+  let notebookName = prompt("Enter the name of the new notebook:");
   if (!notebookName) return;
 
-  const notebookPath = `${currentPath ? currentPath + "/" : ""}${notebookName}.ipynb`;
+  notebookName = notebookName.replace(/\.ipynb$/i, "") + ".ipynb";
+
+  const notebookPath = currentPath
+    ? `${currentPath}/${notebookName}`
+    : notebookName;
 
   try {
     const response = await fetch(
@@ -20,7 +24,7 @@ export async function createNotebook(currentPath: string) {
       location.reload();
     } else {
       const error = await response.json();
-      alert(`Error: ${error.message}`);
+      alert(`Error: ${error.message || "Failed to create notebook"}`);
     }
   } catch (error) {
     console.error("Failed to create notebook:", error);
