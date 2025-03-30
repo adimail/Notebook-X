@@ -1,4 +1,4 @@
-import { RenderedNotebookData } from "@/types";
+import { Notebook as RenderedNotebookData } from "@/types";
 
 export async function sendCodeExecutionRequest(code: string): Promise<any> {
   const response = await fetch("/kernel", {

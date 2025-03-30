@@ -50,11 +50,6 @@ export interface Notebook {
   nbformat_minor: number;
 }
 
-export interface RenderedNotebookData extends Notebook {
-  current_path: string;
-  title: string;
-}
-
 export interface DirectoryItem {
   name: string;
   isDir: boolean;

@@ -1,6 +1,10 @@
 import { Parser, HtmlRenderer } from "commonmark";
 import DOMPurify from "dompurify";
-import { RenderedNotebookData, NotebookCell, CellOutput } from "@/types";
+import {
+  Notebook as RenderedNotebookData,
+  NotebookCell,
+  CellOutput,
+} from "@/types";
 import { EditorView, basicSetup } from "codemirror";
 import { python } from "@codemirror/lang-python";
 import { gruvboxDark } from "@/themes";

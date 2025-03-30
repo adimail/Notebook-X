@@ -11,4 +11,4 @@ export {
   undoAction,
   resetNotebook,
   createNewCell,
-} from "./notebook";
+} from "./notebook-actions";

@@ -11,87 +11,98 @@ import {
   createNewCell,
 } from "@/notebook/actions";
 
-/**
- * Sets up all event listeners required for notebook functionality.
- */
 export function setupEventListeners() {
-  // =========================================================
-  //
-  // Input cell UI logic
-  //
-  // =========================================================
-  document.querySelectorAll(".cell-container").forEach((cell) => {
-    if (!(cell instanceof HTMLElement)) return;
+  setupCellHoverEffects();
+  setupGlobalButtonActions();
+  setupCellToolbarActions();
+  setupMarkdownDoubleClick();
+}
+
+function setupCellHoverEffects() {
+  document.body.addEventListener("mouseover", (event) => {
+    const cell = (event.target as HTMLElement).closest(".cell-container");
+    if (!cell) return;
 
     const toolbar = cell.querySelector(".cell-toolbar") as HTMLElement | null;
-    if (!toolbar) return;
-
-    cell.addEventListener("mouseenter", () => (toolbar.style.opacity = "1"));
-    cell.addEventListener("mouseleave", () => (toolbar.style.opacity = "0"));
+    if (toolbar) toolbar.style.opacity = "1";
   });
 
-  document
-    .getElementById("save-button")
-    ?.addEventListener("click", saveNotebook);
-  document.getElementById("undo-button")?.addEventListener("click", undoAction);
-  document
-    .getElementById("reset-button")
-    ?.addEventListener("click", resetNotebook);
-  document
-    .getElementById("new-cell-button")
-    ?.addEventListener("click", createNewCell);
+  document.body.addEventListener("mouseout", (event) => {
+    const cell = (event.target as HTMLElement).closest(".cell-container");
+    if (!cell) return;
 
-  // =========================================================
-  //
-  // Cell container toolbar
-  //
-  // Run, Edit/save (markdown), Move up, Move down, Duplicate, Delete
-  //
-  // =========================================================
+    const toolbar = cell.querySelector(".cell-toolbar") as HTMLElement | null;
+    if (toolbar) toolbar.style.opacity = "0";
+  });
+}
 
+function setupGlobalButtonActions() {
+  const buttonActions: { [key: string]: () => void } = {
+    "save-button": saveNotebook,
+    "undo-button": undoAction,
+    "reset-button": resetNotebook,
+    "new-cell-button": createNewCell,
+  };
+
+  Object.entries(buttonActions).forEach(([id, handler]) => {
+    document.getElementById(id)?.addEventListener("click", handler);
+  });
+}
+
+function setupCellToolbarActions() {
   document.body.addEventListener("click", (event) => {
     const target = event.target as HTMLElement;
 
-    if (target.matches(".run-btn")) {
-      const cell = target.closest(".cell-container") as HTMLElement;
-      if (cell) runCodeCell(cell);
+    let cell = target.parentElement;
+    while (cell && !cell.classList.contains("cell-container")) {
+      cell = cell.parentElement;
     }
 
-    if (target.matches(".delete-btn")) {
-      const cell = target.closest(".cell-container") as HTMLElement;
-      if (cell) deleteCell(cell);
-    }
+    if (!cell) return;
 
-    if (target.matches(".move-up-btn")) {
-      const cell = target.closest(".cell-container") as HTMLElement;
-      if (cell) moveCellUp(cell);
-    }
+    const cellId = cell.id.replace("cell-", "");
+    if (!cellId) return;
 
-    if (target.matches(".move-down-btn")) {
-      const cell = target.closest(".cell-container") as HTMLElement;
-      if (cell) moveCellDown(cell);
-    }
+    const actions: { [key: string]: (cellId: string) => void } = {
+      "run-btn": runCodeCell,
+      "delete-btn": deleteCell,
+      "move-up-btn": moveCellUp,
+      "move-down-btn": moveCellDown,
+      "duplicate-btn": duplicateCell,
+      "edit-markdown-btn": toggleMarkdownEdit,
+    };
 
-    if (target.matches(".duplicate-btn")) {
-      const cell = target.closest(".cell-container") as HTMLElement;
-      if (cell) duplicateCell(cell);
-    }
-
-    if (target.matches(".edit-markdown-btn")) {
-      const cell = target.closest(".cell-container") as HTMLElement;
-      if (cell) toggleMarkdownEdit(cell);
+    for (const [selector, action] of Object.entries(actions)) {
+      if (target.matches(`.${selector}`)) {
+        action(cellId);
+        break;
+      }
     }
   });
+}
 
+function setupMarkdownDoubleClick() {
   document.body.addEventListener("dblclick", (event) => {
     const target = event.target as HTMLElement;
-    const markdownContainer = target.closest(
-      ".rendered-markdown",
-    ) as HTMLElement;
 
-    if (markdownContainer) {
-      const cell = markdownContainer.closest(".cell-container") as HTMLElement;
-      if (cell) toggleMarkdownEdit(cell);
+    let markdownContainer = target.parentElement;
+    while (
+      markdownContainer &&
+      !markdownContainer.classList.contains("rendered-markdown")
+    ) {
+      markdownContainer = markdownContainer.parentElement;
+    }
+
+    if (!markdownContainer) return;
+
+    let cell = markdownContainer.parentElement;
+    while (cell && !cell.classList.contains("cell-container")) {
+      cell = cell.parentElement;
+    }
+
+    if (cell && cell.id) {
+      const cellId = cell.id.replace("cell-", "");
+      toggleMarkdownEdit(cellId);
     }
   });
 }

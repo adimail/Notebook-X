@@ -1,6 +1,15 @@
 import { notebookxMarkdownRender } from "@/notebook/render";
 
-export function toggleMarkdownEdit(cellElement: HTMLElement) {
+export function toggleMarkdownEdit(cellId: string) {
+  const cellElement = document.getElementById(
+    `cell-${cellId}`,
+  ) as HTMLElement | null;
+
+  if (!cellElement) {
+    console.error("Cell not found for ID:", cellId);
+    return;
+  }
+
   const editorArea = cellElement.querySelector(
     "textarea.input-code",
   ) as HTMLTextAreaElement | null;
@@ -12,7 +21,7 @@ export function toggleMarkdownEdit(cellElement: HTMLElement) {
   ) as HTMLButtonElement | null;
 
   if (!editorArea || !renderedArea || !editBtn) {
-    console.error("Missing elements in markdown cell", cellElement);
+    console.error("Missing elements in markdown cell", cellId);
     return;
   }
 
