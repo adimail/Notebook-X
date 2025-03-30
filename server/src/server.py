@@ -60,5 +60,5 @@ def make_app():
             ),
         ],
         default_handler_class=NotFoundHandler,
-        **settings
+        **settings,
     )
