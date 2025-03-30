@@ -1,6 +1,7 @@
 import { createStore } from "zustand/vanilla";
 import { subscribeWithSelector } from "zustand/middleware";
 import { Notebook, NotebookCell, CellOutput } from "@/types";
+import { saveNotebookInFileSystem } from "@/utils/api";
 
 interface NotebookStore {
   notebook: Notebook | null;
@@ -15,7 +16,7 @@ interface NotebookStore {
 }
 
 export const useNotebookStore = createStore(
-  subscribeWithSelector<NotebookStore>((set) => ({
+  subscribeWithSelector<NotebookStore>((set, get) => ({
     notebook: null,
     stagedChanges: null,
 
@@ -76,11 +77,14 @@ export const useNotebookStore = createStore(
           : state.stagedChanges,
       })),
 
-    saveNotebook: () =>
+    saveNotebook: async () => {
       set((state) => ({
         notebook: state.stagedChanges
           ? { ...state.stagedChanges }
           : state.notebook,
-      })),
+      }));
+
+      await saveNotebookInFileSystem(get().notebook);
+    },
   })),
 );

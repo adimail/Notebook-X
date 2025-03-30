@@ -1,3 +1,4 @@
+import { setupShortcuts } from "./shortcuts";
 import {
   runCodeCell,
   deleteCell,
@@ -16,6 +17,7 @@ export function setupEventListeners() {
   setupGlobalButtonActions();
   setupCellToolbarActions();
   setupMarkdownDoubleClick();
+  setupShortcuts();
 }
 
 function setupCellHoverEffects() {

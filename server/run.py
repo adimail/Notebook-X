@@ -36,10 +36,10 @@ INTRO = """
 
 def main():
     app = make_app()
-    app.listen(8888)
+    app.listen(8197)
 
     logger.info("\n" + INTRO)
-    logger.info("Notebook-X is running at http://localhost:8888")
+    logger.info("Notebook-X is running at http://localhost:8197")
 
     loop = asyncio.get_event_loop()
 

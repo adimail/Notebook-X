@@ -1,5 +1,7 @@
 import os
 import json
+import nbformat
+from nbformat import NotebookNode
 import tornado.web
 from server.src.utils.file_utils import get_file_content
 from server.src.utils.excluded_dirs import EXCLUDE_DIRS, FileTypeMappings
@@ -196,6 +198,57 @@ class APIDeleteFilesHandler(BaseHandler):
                     return
 
             self.write({"status": "success", "deleted": deleted_files})
+
+        except Exception as e:
+            self.set_status(500)
+            self.write({"error": str(e)})
+
+
+class APISaveNotebookHandler(BaseHandler):
+    def post(self):
+        """Handle saving a notebook to the file system with validation."""
+        try:
+            data = json.loads(self.request.body.decode("utf-8"))
+            notebook_content = data.get("notebook")
+            file_path = data.get("path")
+
+            if not notebook_content or not file_path:
+                self.set_status(400)
+                self.write({"error": "Notebook data and path are required"})
+                return
+
+            try:
+                if isinstance(notebook_content, dict):
+                    nb = nbformat.from_dict(notebook_content)
+                else:
+                    nb = nbformat.reads(json.dumps(notebook_content), as_version=4)
+
+                nbformat.validate(nb)
+
+            except nbformat.ValidationError as ve:
+                self.set_status(400)
+                self.write({"error": f"Invalid notebook format: {str(ve)}"})
+                return
+            except Exception as ve:
+                self.set_status(400)
+                self.write({"error": f"Failed to parse notebook: {str(ve)}"})
+                return
+
+            full_path = self._sanitize_path(file_path)
+
+            if not full_path.endswith(".ipynb"):
+                full_path += ".ipynb"
+
+            os.makedirs(os.path.dirname(full_path), exist_ok=True)
+
+            with open(full_path, "w", encoding="utf-8") as f:
+                nbformat.write(nb, f)
+
+            self.write({"status": "success", "message": "Notebook saved successfully"})
+
+        except tornado.web.HTTPError as e:
+            self.set_status(e.status_code)
+            self.write({"error": e.reason})
 
         except Exception as e:
             self.set_status(500)

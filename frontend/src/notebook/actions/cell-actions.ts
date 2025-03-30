@@ -9,6 +9,7 @@ import { generateCellId } from "@/utils";
 export function deleteCell(cellId: string): void {
   const store = useNotebookStore.getState();
   store.deleteCell(cellId);
+  store.saveNotebook();
 }
 
 /**

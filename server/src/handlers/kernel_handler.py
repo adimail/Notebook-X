@@ -19,7 +19,6 @@ class KernelHandler(tornado.web.RequestHandler):
         try:
             data = json.loads(self.request.body)
             code = data.get("code")
-            kernel_id = data.get("kernel_id", "default-kernel")
 
             if not code:
                 self.set_status(400)
@@ -29,14 +28,12 @@ class KernelHandler(tornado.web.RequestHandler):
             # Simulating different output types
             if code.strip() == "print('Hello')":
                 response = {
-                    "kernel_id": kernel_id,
                     "output_type": "stream",
                     "name": "stdout",
                     "text": ["Hello\n"],
                 }
             elif code.strip() == "df":
                 response = {
-                    "kernel_id": kernel_id,
                     "output_type": "display_data",
                     "data": {
                         "text/html": """
@@ -69,14 +66,12 @@ class KernelHandler(tornado.web.RequestHandler):
                 }
             elif code.strip() == "42":
                 response = {
-                    "kernel_id": kernel_id,
                     "output_type": "execute_result",
                     "execution_count": 1,
                     "data": {"text/plain": "42"},
                 }
             elif code.strip() == "1/0":
                 response = {
-                    "kernel_id": kernel_id,
                     "output_type": "error",
                     "ename": "ZeroDivisionError",
                     "evalue": "division by zero",
@@ -88,21 +83,18 @@ class KernelHandler(tornado.web.RequestHandler):
                 # Simulated base64 image response
                 fake_image_data = base64.b64encode(b"fake-image-bytes").decode()
                 response = {
-                    "kernel_id": kernel_id,
                     "output_type": "display_data",
                     "data": {"image/png": fake_image_data},
                     "metadata": {},
                 }
             elif code.strip() == "json":
                 response = {
-                    "kernel_id": kernel_id,
                     "output_type": "display_data",
                     "data": {"application/json": {"message": "Hello, JSON!"}},
                     "metadata": {},
                 }
             else:
                 response = {
-                    "kernel_id": kernel_id,
                     "output_type": "stream",
                     "name": "stdout",
                     "text": [f"Executed: {code}\n"],
