@@ -52,11 +52,7 @@ function renderCell(cell: NotebookCell): string {
             <div class="input-area">
               <textarea class="input-code">${sourceContent}</textarea>
             </div>
-            ${
-              cell.outputs && cell.outputs.length
-                ? `<div class="output-area">${cell.outputs.map(renderOutput).join("")}</div>`
-                : ""
-            }
+			<div class="output-area">${cell?.outputs?.map(renderOutput).join("")}</div>
           </div>
         </div>
       </div>
@@ -128,30 +124,50 @@ function initializeCodeEditors(
   });
 }
 
-function renderOutput(output: CellOutput): string {
+export function renderOutput(output: CellOutput): string {
   if (output.output_type === "stream") {
     return `<pre class="output-code stream-output"><code>${DOMPurify.sanitize(
       Array.isArray(output.text) ? output.text.join("\n") : String(output.text),
     )}</code></pre>`;
-  } else if (
+  }
+
+  if (
     output.output_type === "display_data" ||
     output.output_type === "execute_result"
   ) {
-    if (output.data && output.data["text/html"]) {
-      return `<div class="output-html">${DOMPurify.sanitize(output.data["text/html"])}</div>`;
-    } else if (output.data && output.data["image/png"]) {
-      return `<img class="output-image" src="data:image/png;base64,${output.data["image/png"]}" />`;
-    } else if (output.data && output.data["text/plain"]) {
-      return `<pre class="output-code output-html"><code>${DOMPurify.sanitize(output.data["text/plain"])}</code></pre>`;
-    } else {
-      return `<pre class="output-code"><code>Unknown output format</code></pre>`;
+    if (output.data) {
+      if (output.data["text/html"]) {
+        return `<div class="output-html">${DOMPurify.sanitize(output.data["text/html"])}</div>`;
+      }
+      if (output.data["image/png"]) {
+        return `<img class="output-image" src="data:image/png;base64,${output.data["image/png"]}" />`;
+      }
+      if (output.data["image/jpeg"]) {
+        return `<img class="output-image" src="data:image/jpeg;base64,${output.data["image/jpeg"]}" />`;
+      }
+      if (output.data["text/plain"]) {
+        return `<pre class="output-code output-html"><code>${DOMPurify.sanitize(output.data["text/plain"])}</code></pre>`;
+      }
+      if (output.data["application/javascript"]) {
+        return `<script>${output.data["application/javascript"]}</script>`;
+      }
+      if (output.data["application/json"]) {
+        return `<pre class="output-code output-json"><code>${DOMPurify.sanitize(
+          JSON.stringify(output.data["application/json"], null, 2),
+        )}</code></pre>`;
+      }
+      if (output.data["text/markdown"]) {
+        return `<div class="output-markdown">${DOMPurify.sanitize(output.data["text/markdown"])}</div>`;
+      }
     }
-  } else if (output.output_type === "error") {
+    return `<pre class="output-code"><code>Unknown output format</code></pre>`;
+  }
+
+  if (output.output_type === "error") {
     return `<pre class="output-code error-output"><code>${DOMPurify.sanitize(
-      Array.isArray(output.traceback)
-        ? output.traceback.join("\n")
-        : String(output.traceback),
+      output.traceback ? output.traceback.join("\n") : "Unknown error",
     )}</code></pre>`;
   }
-  return "";
+
+  return `<pre class="output-code"><code>Unrecognized output type ${output.toString()}</code></pre>`;
 }

@@ -1,12 +1,22 @@
 import { Notebook as RenderedNotebookData } from "@/types";
 
 export async function sendCodeExecutionRequest(code: string): Promise<any> {
-  const response = await fetch("/kernel", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ code }),
-  });
-  return response.json();
+  try {
+    const response = await fetch("/kernel", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server responded with status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function fetchNotebook(
