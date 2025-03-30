@@ -6,7 +6,9 @@ import { saveNotebookInFileSystem } from "@/utils/api";
 interface NotebookStore {
   notebook: Notebook | null;
   stagedChanges: Notebook | null;
+  kernelId: string | null;
 
+  setKernelId: (kernelId: string | null) => void;
   setNotebook: (notebook: Notebook) => void;
   updateCell: (cellId: string, update: Partial<NotebookCell>) => void;
   updateOutputCell: (cellId: string, output: CellOutput[]) => void;
@@ -19,7 +21,9 @@ export const useNotebookStore = createStore(
   subscribeWithSelector<NotebookStore>((set, get) => ({
     notebook: null,
     stagedChanges: null,
+    kernelId: null,
 
+    setKernelId: (kernelId) => set({ kernelId }),
     setNotebook: (notebook) =>
       set(() => ({ notebook, stagedChanges: notebook })),
 

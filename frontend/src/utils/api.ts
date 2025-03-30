@@ -1,11 +1,14 @@
 import { Notebook as RenderedNotebookData } from "@/types";
 
-export async function sendCodeExecutionRequest(code: string): Promise<any> {
+export async function sendCodeExecutionRequest(
+  kernelId: string,
+  code: string,
+): Promise<any> {
   try {
     const response = await fetch("/kernel", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ kernel_id: kernelId, code }),
     });
 
     if (!response.ok) {

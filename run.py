@@ -3,6 +3,7 @@ import tornado.ioloop
 import asyncio
 import logging
 from server import make_app
+from server.src.managers.kernel_manager import KernelManager
 
 LOG_FILE = "notebookx.log"
 
@@ -18,12 +19,6 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-
-def shutdown(loop):
-    logger.info("Shutting down Notebook X server...")
-    loop.stop()
-
-
 INTRO = """
   _   _    ___    _____   _____   ____     ___     ___    _  __   __  __
  | \ | |  / _ \  |_   _| | ____| | __ )   / _ \   / _ \  | |/ /   \ \/ /
@@ -34,8 +29,23 @@ INTRO = """
 """
 
 
+def shutdown(loop, kernel_manager):
+    """Shutdown the server and all running kernels."""
+    logger.info("Shutting down Notebook X server...")
+
+    active_kernels = list(kernel_manager.kernels.keys())
+    for kernel_id in active_kernels:
+        logger.info(f"Shutting down kernel {kernel_id}")
+        kernel_manager.shutdown_kernel(kernel_id)
+
+    loop.stop()
+
+
 def main():
+    kernel_manager = KernelManager()
+
     app = make_app()
+    app.settings["kernel_manager"] = kernel_manager
     app.listen(8197)
 
     logger.info("\n" + INTRO)
@@ -43,13 +53,13 @@ def main():
 
     loop = asyncio.get_event_loop()
 
-    signal.signal(signal.SIGINT, lambda sig, frame: shutdown(loop))
-    signal.signal(signal.SIGTERM, lambda sig, frame: shutdown(loop))
+    signal.signal(signal.SIGINT, lambda sig, frame: shutdown(loop, kernel_manager))
+    signal.signal(signal.SIGTERM, lambda sig, frame: shutdown(loop, kernel_manager))
 
     try:
         loop.run_forever()
     except KeyboardInterrupt:
-        shutdown(loop)
+        shutdown(loop, kernel_manager)
 
 
 if __name__ == "__main__":

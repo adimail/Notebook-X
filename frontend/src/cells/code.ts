@@ -30,6 +30,12 @@ export class CodeCell extends Cell {
     }
 
     const code = this.editorView.state.doc.toString();
+    const kernelId = useNotebookStore.getState().kernelId;
+
+    if (!kernelId) {
+      console.error("No kernel ID available. Please start a kernel first.");
+      return;
+    }
 
     const outputArea = this.element.querySelector(
       ".output-area",
@@ -40,7 +46,7 @@ export class CodeCell extends Cell {
 
     outputArea.innerHTML = "<pre>Running...</pre>";
     try {
-      const result = await sendCodeExecutionRequest(code);
+      const result = await sendCodeExecutionRequest(kernelId, code);
 
       const cellContainer = this.element.closest(".cell-container");
       if (cellContainer && cellContainer.id.startsWith("cell-")) {

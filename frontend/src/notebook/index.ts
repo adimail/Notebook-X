@@ -19,6 +19,8 @@ class Notebook {
     this.editorContainer = document.getElementById("editor-container");
     this.saveIndicator = document.getElementById("save-indicator");
 
+    this.startKernel();
+
     // Subscribe to stagedChanges updates
     useNotebookStore.subscribe(
       (state) => state.stagedChanges,
@@ -40,6 +42,39 @@ class Notebook {
         }
       },
     );
+  }
+
+  async startKernel() {
+    try {
+      const response = await fetch("/kernel", {
+        method: "GET",
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to start kernel: ${response.status}`);
+      }
+      const data = await response.json();
+      const kernelId = data.kernel_id;
+      useNotebookStore.getState().setKernelId(kernelId);
+    } catch (error) {
+      console.error("Error starting kernel:", error);
+    }
+  }
+
+  async shutdownKernel() {
+    const kernelId = useNotebookStore.getState().kernelId;
+    if (!kernelId) return;
+
+    try {
+      const response = await fetch(`/kernel?kernel_id=${kernelId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to shut down kernel: ${response.status}`);
+      }
+      useNotebookStore.getState().setKernelId(null);
+    } catch (error) {
+      console.error("Error shutting down kernel:", error);
+    }
   }
 
   async loadAndRender() {

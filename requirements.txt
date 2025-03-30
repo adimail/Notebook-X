@@ -3,3 +3,4 @@ pyzmq
 pre-commit
 ipykernel
 nbformat
+jupyter_client
