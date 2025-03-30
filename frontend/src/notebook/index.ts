@@ -20,9 +20,10 @@ class Notebook {
     this.saveIndicator = document.getElementById("save-indicator");
 
     useNotebookStore.subscribe((state) => {
-      if (state.notebook) {
-        console.log("Notebook rendered");
-        this.render(state.notebook);
+      if (state.stagedChanges) {
+        console.log("stagedChanges rendered");
+        console.log(state.stagedChanges);
+        this.render(state.stagedChanges);
       }
     });
   }
@@ -43,15 +44,7 @@ class Notebook {
 
     renderNotebook(notebookData, this.editorContainer, this.editors);
 
-    updateDOMSaveIndicator(
-      this.editorContainer,
-      this.saveIndicator,
-      notebookData.cells.map((cell) =>
-        Array.isArray(cell.source)
-          ? cell.source.join("\n")
-          : String(cell.source),
-      ),
-    );
+    updateDOMSaveIndicator(this.saveIndicator);
 
     updateDOMTextareaAutoResize();
   }

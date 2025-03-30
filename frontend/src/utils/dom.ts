@@ -1,3 +1,5 @@
+import { useNotebookStore } from "@/store";
+
 export function updateOutputVisibility(cell: HTMLElement): void {
   const outputArea = cell.querySelector(".output-area") as HTMLElement;
   const outputCode = cell.querySelector(".output-code") as HTMLElement;
@@ -35,51 +37,21 @@ export function updateDOMTextareaAutoResize(): void {
 
 function updateSaveIndicator(
   saveIndicator: HTMLElement | null,
-  saved: boolean,
+  isSaved: boolean,
 ): void {
   if (!saveIndicator) return;
-  saveIndicator.classList.toggle("saved", saved);
-  saveIndicator.classList.toggle("unsaved", !saved);
-}
-
-function storeOriginalContent(
-  editorContainer: HTMLElement | null,
-  saveIndicator: HTMLElement | null,
-): string[] {
-  if (!editorContainer) return [];
-  const originalContent = Array.from(
-    editorContainer.querySelectorAll("textarea"),
-  ).map((textarea) => (textarea as HTMLTextAreaElement).value);
-  updateSaveIndicator(saveIndicator, true);
-  return originalContent;
-}
-
-function checkForChanges(
-  editorContainer: HTMLElement | null,
-  originalContent: string[],
-  saveIndicator: HTMLElement | null,
-): void {
-  if (!editorContainer) return;
-  const currentContent = Array.from(
-    editorContainer.querySelectorAll("textarea"),
-  ).map((textarea) => (textarea as HTMLTextAreaElement).value);
-  const isSaved =
-    JSON.stringify(originalContent) === JSON.stringify(currentContent);
-  updateSaveIndicator(saveIndicator, isSaved);
+  saveIndicator.classList.toggle("saved", isSaved);
+  saveIndicator.classList.toggle("unsaved", !isSaved);
 }
 
 export function updateDOMSaveIndicator(
-  editorContainer: HTMLElement | null,
   saveIndicator: HTMLElement | null,
-  originalContent: string[],
 ): void {
-  if (!editorContainer) return;
+  if (!saveIndicator) return;
 
-  originalContent = storeOriginalContent(editorContainer, saveIndicator);
-
-  editorContainer.querySelectorAll("textarea").forEach((textarea) => {
-    textarea.addEventListener("input", () =>
-      checkForChanges(editorContainer, originalContent, saveIndicator),
-    );
+  useNotebookStore.subscribe((state) => {
+    const isSaved =
+      JSON.stringify(state.notebook) === JSON.stringify(state.stagedChanges);
+    updateSaveIndicator(saveIndicator, isSaved);
   });
 }
