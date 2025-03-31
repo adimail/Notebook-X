@@ -49,7 +49,7 @@ def make_app():
             (r"/api/packages", PackagesHandler),
             (r"/packages", PackagesHandler),
             (r"/ws", WebSocketHandler),
-            (r"/kernel", KernelHandler),
+            (r"/api/kernel", KernelHandler),
             (r"/api/notebook/create", CreateNotebookHandler),
             (r"/api/load_notebook", LoadNotebookHandler),
             (r"/api/delete_files", APIDeleteFilesHandler, dict(base_dir=base_dir)),

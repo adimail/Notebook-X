@@ -1,6 +1,6 @@
 import { createStore } from "zustand/vanilla";
 import { subscribeWithSelector } from "zustand/middleware";
-import { Notebook, NotebookCell, CellOutput } from "@/types";
+import { Notebook, NotebookCell, ExecutionResults } from "@/types";
 import { saveNotebookInFileSystem } from "@/utils/api";
 
 interface NotebookStore {
@@ -11,7 +11,7 @@ interface NotebookStore {
   setKernelId: (kernelId: string | null) => void;
   setNotebook: (notebook: Notebook) => void;
   updateCell: (cellId: string, update: Partial<NotebookCell>) => void;
-  updateOutputCell: (cellId: string, output: CellOutput[]) => void;
+  updateOutputCell: (cellId: string, output: ExecutionResults) => void;
   addCell: (cell: NotebookCell, index?: number) => void;
   deleteCell: (cellId: string) => void;
   saveNotebook: () => void;
@@ -39,7 +39,7 @@ export const useNotebookStore = createStore(
           : state.stagedChanges,
       })),
 
-    updateOutputCell: (cellId: string, output: CellOutput | CellOutput[]) =>
+    updateOutputCell: (cellId: string, output: ExecutionResults) =>
       set((state) => ({
         stagedChanges: state.stagedChanges
           ? {
@@ -48,7 +48,8 @@ export const useNotebookStore = createStore(
                 cell.id === cellId
                   ? {
                       ...cell,
-                      outputs: Array.isArray(output) ? output : [output],
+                      execution_count: output.execution_count,
+                      outputs: output.outputs,
                     }
                   : cell,
               ),

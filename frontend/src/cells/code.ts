@@ -53,9 +53,15 @@ export class CodeCell extends Cell {
         const cellId = cellContainer.id.replace("cell-", "");
         useNotebookStore.getState().updateOutputCell(cellId, result);
       }
-      outputArea.innerHTML = renderOutput(result);
+      console.log(result);
+      outputArea.innerHTML = renderOutput(
+        Array.isArray(result)
+          ? result.flatMap((res) => res.outputs)
+          : result.outputs,
+      );
     } catch (error) {
       outputArea.innerHTML = "<pre>Error executing code.</pre>";
+      console.log(error);
     }
   }
 }

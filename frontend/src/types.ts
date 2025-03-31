@@ -1,10 +1,8 @@
 export interface CellOutput {
   output_type: "stream" | "execute_result" | "display_data" | "error";
-  name?: string; // For "stream" output (e.g., "stdout" or "stderr")
-  text?: string[]; // For "stream" output
-  execution_count?: number; // For "execute_result"
-
-  // Used in "execute_result" and "display_data"
+  name?: string;
+  text?: string;
+  execution_count?: number;
   data?: {
     "text/plain"?: string;
     "text/html"?: string;
@@ -13,14 +11,17 @@ export interface CellOutput {
     "application/javascript"?: string;
     "application/json"?: string;
     "text/markdown"?: string;
-    [key: string]: any; // Allow other MIME types
+    [key: string]: any;
   };
-  metadata?: Record<string, any>; // Metadata (e.g., image size, format, etc.)
+  metadata?: Record<string, any>;
+  ename?: string;
+  evalue?: string;
+  traceback?: string[];
+}
 
-  // Used in "error"
-  ename?: string; // Exception name
-  evalue?: string; // Exception message
-  traceback?: string[]; // Stack trace
+export interface ExecutionResults {
+  execution_count?: number;
+  outputs: CellOutput[];
 }
 
 export interface NotebookCell {
