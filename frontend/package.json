@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adimail/Notebook-X.git"
+    "url": "git+https://github.com/adimail/notebook-x.git"
   },
   "author": "Aditya Godse",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/adimail/Notebook-X/issues"
+    "url": "https://github.com/adimail/notebook-x/issues"
   },
-  "homepage": "https://github.com/adimail/Notebook-X#readme",
+  "homepage": "https://github.com/adimail/notebook-x#readme",
   "devDependencies": {
     "@types/commonmark": "^0.27.9",
     "css-loader": "^7.1.2",
