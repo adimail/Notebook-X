@@ -26,4 +26,4 @@ Documentation = "https://adimail.github.io/notebook-x"
 notebookx = "server.run:main"
 
 [tool.setuptools]
-packages = ["server", "kernels", "frontend", "config"]
+packages = ["server", "frontend"]
