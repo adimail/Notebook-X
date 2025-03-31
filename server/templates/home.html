@@ -1,18 +1,23 @@
-{% extends "base.html" %} {% block head %}
-<script src="{{ static_url('tree.js') }}"></script>
-{% end %} {% block toolbar %} {% include "toolbar.html" %} {% end %} {% block
-content %}
-<p>Path: {{ current_path }}</p>
-<div class="tree-tools">
-  <button id="new-notebook-btn">New Notebook</button>
-  <button id="delete-button" disabled>Delete Selected</button>
-</div>
-<div id="directory-container"></div>
-<footer>
-  <p>
-    Made with ❤️ by
-    <a href="https://adimail.github.io/" target="_blank">Aditya Godse</a>
-  </p>
-  <a href="https://github.com/adimail/notebook-x" target="_blank">GitHub</a>
-</footer>
+{% extends "base.html" %}
+{% block head %}
+    <script src="{{ static_url('tree.js') }}"></script>
+{% end %}
+{% block toolbar %}
+    {% include "toolbar.html" %}
+{% end %}
+{% block
+    content %}
+    <p>Path: {{ current_path }}</p>
+    <div class="tree-tools">
+        <button id="new-notebook-btn">New Notebook</button>
+        <button id="delete-button" disabled>Delete Selected</button>
+    </div>
+    <div id="directory-container"></div>
+    <footer>
+        <p>
+            Made with ❤️ by
+            <a href="https://adimail.github.io/" target="_blank">Aditya Godse</a>
+        </p>
+        <a href="https://github.com/adimail/notebook-x" target="_blank">GitHub</a>
+    </footer>
 {% end %}
