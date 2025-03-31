@@ -4,10 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "notebookx"
-version = "0.1.0"
+version = "0.1.1"
 description = "A lightweight python notebook"
 authors = [{ name = "Aditya Godse", email = "adimail2404@gmail.com" }]
-readme = "README.md"
+license = { text = "CC BY 4.0 (Attribution-NonCommercial 4.0 International)" }
+readme = "README_PYPI.md"
 requires-python = ">=3.9"
 dependencies = [
     "tornado",
@@ -18,11 +19,11 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/adimail/Notebook-X"
-Documentation = "https://adimail.github.io/Notebook-X"
+Homepage = "https://github.com/adimail/notebook-x"
+Documentation = "https://adimail.github.io/notebook-x"
 
 [project.scripts]
 notebookx = "server.run:main"
 
 [tool.setuptools]
-packages = ["server", "kernels", "frontend", "config"]
+packages = ["server", "frontend"]
