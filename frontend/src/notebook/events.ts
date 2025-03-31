@@ -9,7 +9,7 @@ import {
   saveNotebook,
   undoAction,
   resetNotebook,
-  createNewCell,
+  createCell,
 } from "@/notebook/actions";
 
 export function setupEventListeners() {
@@ -43,7 +43,8 @@ function setupGlobalButtonActions() {
     "save-button": saveNotebook,
     "undo-button": undoAction,
     "reset-button": resetNotebook,
-    "new-cell-button": createNewCell,
+    "new-code-cell-btn": () => createCell("code"),
+    "new-markdown-cell-btn": () => createCell("markdown"),
   };
 
   Object.entries(buttonActions).forEach(([id, handler]) => {
@@ -62,7 +63,7 @@ function setupCellToolbarActions() {
 
     if (!cell) return;
 
-    const cellId = cell.id.replace("cell-", "");
+    const cellId = cell.id;
     if (!cellId) return;
 
     const actions: { [key: string]: (cellId: string) => void } = {
@@ -103,8 +104,7 @@ function setupMarkdownDoubleClick() {
     }
 
     if (cell && cell.id) {
-      const cellId = cell.id.replace("cell-", "");
-      toggleMarkdownEdit(cellId);
+      toggleMarkdownEdit(cell.id);
     }
   });
 }

@@ -49,8 +49,8 @@ export class CodeCell extends Cell {
       const result = await sendCodeExecutionRequest(kernelId, code);
 
       const cellContainer = this.element.closest(".cell-container");
-      if (cellContainer && cellContainer.id.startsWith("cell-")) {
-        const cellId = cellContainer.id.replace("cell-", "");
+      if (cellContainer) {
+        const cellId = cellContainer.id;
         useNotebookStore.getState().updateOutputCell(cellId, result);
       }
       console.log(result);

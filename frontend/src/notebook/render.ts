@@ -9,6 +9,7 @@ import { EditorView, basicSetup } from "codemirror";
 import { python } from "@codemirror/lang-python";
 import { gruvboxDark } from "@/themes";
 import { useNotebookStore } from "@/store";
+import { createCell } from "./actions";
 
 export function notebookxMarkdownRender(mdText: string): string {
   const reader = new Parser();
@@ -27,8 +28,27 @@ export function renderNotebook(
     <div class="notebook">
       ${notebookData.cells.map((cell: NotebookCell) => renderCell(cell)).join("")}
     </div>
+    <div class="add-cell-buttons">
+      <button class="new-code-cell-btn">+ Code</button>
+      <button class="new-markdown-cell-btn">+ Markdown</button>
+    </div>
   `;
+
   initializeCodeEditors(editorContainer, editors);
+
+  // Add event listeners to buttons
+  const codeButton = editorContainer.querySelector(".new-code-cell-btn");
+  const markdownButton = editorContainer.querySelector(
+    ".new-markdown-cell-btn",
+  );
+
+  if (codeButton) {
+    codeButton.addEventListener("click", () => createCell("code"));
+  }
+
+  if (markdownButton) {
+    markdownButton.addEventListener("click", () => createCell("markdown"));
+  }
 }
 
 function renderCell(cell: NotebookCell): string {
@@ -36,9 +56,16 @@ function renderCell(cell: NotebookCell): string {
     Array.isArray(cell.source) ? cell.source.join("") : String(cell.source),
   );
 
+  const commonButtons = `
+    <div class="add-cell-buttons cell-toolbar">
+      <button class="add-code-btn" data-index="${cell.id}">+ Code</button>
+      <button class="add-markdown-btn" data-index="${cell.id}">+ Markdown</button>
+    </div>
+  `;
+
   if (cell.cell_type === "code") {
     return `
-      <div class="cell-container" id="cell-${cell.id}" data-source="${sourceContent}">
+      <div class="cell-container" id="${cell.id}"">
         <div class="cell-toolbar">
           <button class="run-btn">Run</button>
           <button class="move-up-btn">▲</button>
@@ -52,14 +79,15 @@ function renderCell(cell: NotebookCell): string {
             <div class="input-area">
               <textarea class="input-code">${sourceContent}</textarea>
             </div>
-			<div class="output-area">${cell?.outputs?.map((output) => renderOutput([output])).join("")}</div>
+            <div class="output-area">${cell?.outputs?.map((output) => renderOutput([output])).join("")}</div>
           </div>
         </div>
+        ${commonButtons}
       </div>
     `;
   } else {
     return `
-      <div class="cell-container" id="cell-${cell.id}" data-source="${sourceContent}">
+      <div class="cell-container" id="${cell.id}"">
         <div class="cell-toolbar">
           <button class="edit-markdown-btn">Edit</button>
           <button class="move-up-btn">▲</button>
@@ -73,9 +101,10 @@ function renderCell(cell: NotebookCell): string {
             <div class="input-area hidden">
               <textarea class="input-code">${sourceContent}</textarea>
             </div>
-            <div class="rendered-markdown">${notebookxMarkdownRender(sourceContent)}</div>
+			<div class="rendered-markdown">${sourceContent.trim() ? notebookxMarkdownRender(sourceContent) : "<h3>(empty markdown cell)</h3>"}</div>
           </div>
         </div>
+        ${commonButtons}
       </div>
     `;
   }
@@ -92,7 +121,7 @@ function initializeCodeEditors(
   codeCells.forEach((textarea: Element) => {
     const parent = textarea.parentElement as HTMLElement;
     const cellContainer = parent.closest(".cell-container") as HTMLElement;
-    const cellId = cellContainer.id.replace("cell-", "");
+    const cellId = cellContainer.id;
 
     const editor = new EditorView({
       doc: (textarea as HTMLTextAreaElement).value,
@@ -114,14 +143,31 @@ function initializeCodeEditors(
     textarea.remove();
   });
 
-  editorContainer.addEventListener("input", (event) => {
-    const target = event.target as HTMLTextAreaElement;
-    if (target.classList.contains("input-code")) {
-      const cellContainer = target.closest(".cell-container") as HTMLElement;
-      const cellId = cellContainer.id.replace("cell-", "");
-      useNotebookStore.getState().updateCell(cellId, { source: target.value });
-    }
-  });
+  if (!editorContainer.dataset.listenerAttached) {
+    editorContainer.dataset.listenerAttached = "true";
+
+    editorContainer.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement;
+
+      if (target.classList.contains("add-code-btn")) {
+        const cellId = target.dataset.index;
+        const store = useNotebookStore.getState();
+        const index = store.notebook?.cells.findIndex(
+          (cell) => cell.id === cellId,
+        );
+        createCell("code", index !== undefined ? index + 1 : undefined);
+      }
+
+      if (target.classList.contains("add-markdown-btn")) {
+        const cellId = target.dataset.index;
+        const store = useNotebookStore.getState();
+        const index = store.notebook?.cells.findIndex(
+          (cell) => cell.id === cellId,
+        );
+        createCell("markdown", index !== undefined ? index + 1 : undefined);
+      }
+    });
+  }
 }
 
 export function renderOutput(outputs: CellOutput[]): string {

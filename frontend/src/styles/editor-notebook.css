@@ -24,14 +24,6 @@
   position: relative;
 }
 
-.cell-toolbar {
-  width: 100%;
-  display: flex;
-  gap: var(--editor-toolbar-gap, 4px);
-  margin-bottom: 6px;
-  justify-content: flex-end;
-}
-
 .code-cell {
   color: var(--editor-code-text, #abb2bf);
   font-family: var(--editor-font-family-code, monospace);
@@ -148,7 +140,16 @@ textarea:focus {
   width: 100%;
 }
 
+.add-cell-buttons button {
+  padding: 10px 20px;
+}
+
 .cell-toolbar {
+  width: 100%;
+  display: flex;
+  gap: var(--editor-toolbar-gap, 4px);
+  margin-bottom: 6px;
+  justify-content: flex-end;
   opacity: 0;
   transition: opacity 0.3s ease;
 }

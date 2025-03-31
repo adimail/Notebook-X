@@ -1,14 +1,9 @@
 import { notebookxMarkdownRender } from "@/notebook/render";
+import { useNotebookStore } from "@/store";
 
-export function toggleMarkdownEdit(cellId: string) {
-  const cellElement = document.getElementById(
-    `cell-${cellId}`,
-  ) as HTMLElement | null;
-
-  if (!cellElement) {
-    console.error("Cell not found for ID:", cellId);
-    return;
-  }
+export function toggleMarkdownEdit(cellId: string): void {
+  const cellElement = document.getElementById(cellId);
+  if (!cellElement) return console.error("Cell not found:", cellId);
 
   const editorArea = cellElement.querySelector(
     "textarea.input-code",
@@ -19,30 +14,27 @@ export function toggleMarkdownEdit(cellId: string) {
   const editBtn = cellElement.querySelector(
     ".edit-markdown-btn",
   ) as HTMLButtonElement | null;
-
-  if (!editorArea || !renderedArea || !editBtn) {
-    console.error("Missing elements in markdown cell", cellId);
-    return;
-  }
+  if (!editorArea || !renderedArea || !editBtn) return;
 
   const isEditing = cellElement.dataset.editing === "true";
+  cellElement.dataset.editing = String(!isEditing);
+
+  const { updateCell, stagedChanges } = useNotebookStore.getState();
+  const cell = stagedChanges?.cells.find(
+    (c: { id: string }) => c.id === cellId,
+  );
+  if (!cell) return console.error("Cell not found in store:", cellId);
 
   if (isEditing) {
-    const newMarkdown = editorArea.value.trim();
-    renderedArea.innerHTML = notebookxMarkdownRender(newMarkdown);
-    cellElement.dataset.source = newMarkdown;
-
-    editorArea.closest(".input-area")?.classList.add("hidden");
-    renderedArea.classList.remove("hidden");
-
-    editBtn.textContent = "Edit";
-    cellElement.dataset.editing = "false";
+    updateCell(cellId, { source: editorArea.value.trim() });
+    renderedArea.innerHTML = notebookxMarkdownRender(
+      editorArea.value.trim() || "<h3>(empty markdown cell)</h3>",
+    );
   } else {
-    editorArea.value = cellElement.dataset.source || "";
-    editorArea.closest(".input-area")?.classList.remove("hidden");
-    renderedArea.classList.add("hidden");
-
-    editBtn.textContent = "Save";
-    cellElement.dataset.editing = "true";
+    editorArea.value = cell.source || renderedArea.innerText.trim();
   }
+
+  editorArea.closest(".input-area")?.classList.toggle("hidden", isEditing);
+  renderedArea.classList.toggle("hidden", !isEditing);
+  editBtn.textContent = isEditing ? "Edit" : "Save";
 }

@@ -5,7 +5,7 @@ export function runCodeCell(cellId: string) {
   let cellElement: HTMLElement | null = null;
 
   allCells.forEach((cell) => {
-    if (cell.id === `cell-${cellId}`) {
+    if (cell.id === `${cellId}`) {
       cellElement = cell as HTMLElement;
     }
   });

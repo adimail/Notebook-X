@@ -5,10 +5,6 @@ export {
   duplicateCell,
   moveCellDown,
   moveCellUp,
+  createCell,
 } from "./cell-actions";
-export {
-  saveNotebook,
-  undoAction,
-  resetNotebook,
-  createNewCell,
-} from "./notebook-actions";
+export { saveNotebook, undoAction, resetNotebook } from "./notebook-actions";
