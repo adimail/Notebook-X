@@ -56,7 +56,7 @@ Shortcuts:
   - Esc + M: Convert a code cell to a Markdown cell.
   - Esc + Y: Convert a Markdown cell to a code cell.
 
-For more details, visit: https://adimail.github.io/Notebook-X
+For more details, visit: https://adimail.github.io/notebook-x
     """
     print(help_text)
 

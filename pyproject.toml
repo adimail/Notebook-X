@@ -18,8 +18,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/adimail/Notebook-X"
-Documentation = "https://adimail.github.io/Notebook-X"
+Homepage = "https://github.com/adimail/notebook-x"
+Documentation = "https://adimail.github.io/notebook-x"
 
 [project.scripts]
 notebookx = "server.run:main"
