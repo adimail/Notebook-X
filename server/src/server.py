@@ -18,6 +18,7 @@ from server.src.handlers.notebook_handler import (
 from server.src.handlers.kernel_handler import KernelHandler
 from server.src.handlers.packages_handler import PackagesHandler
 from server.src.managers.kernel_manager import KernelManager
+from server.src.handlers.runningkernels import RunningKernelsHandler
 
 
 class NotFoundHandler(tornado.web.RequestHandler):
@@ -51,6 +52,8 @@ def make_app():
             (r"/api/files", APIFilesHandler, dict(base_dir=base_dir)),
             (r"/api/packages", PackagesHandler),
             (r"/packages", PackagesHandler),
+            (r"/running", RunningKernelsHandler),
+            (r"/api/running_kernels", RunningKernelsHandler),
             (r"/ws", WebSocketHandler),
             (r"/api/kernel", KernelHandler),
             (r"/api/notebook/create", CreateNotebookHandler),

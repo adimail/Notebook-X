@@ -37,20 +37,3 @@
   text-align: right;
   justify-content: center;
 }
-
-#packages-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-#packages-table th,
-#packages-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-#packages-table th {
-  background-color: gray;
-}

@@ -9,7 +9,7 @@ import {
   updateDOMSaveIndicator,
 } from "@/utils/dom";
 
-class Notebook {
+export class Notebook {
   private saveIndicator: HTMLElement | null = null;
   private editorContainer: HTMLElement | null = null;
   private editors: Map<string, EditorView> = new Map();
@@ -18,29 +18,16 @@ class Notebook {
     setupEventListeners();
     this.editorContainer = document.getElementById("editor-container");
     this.saveIndicator = document.getElementById("save-indicator");
-
     this.startKernel();
 
-    // Subscribe to stagedChanges updates
     useNotebookStore.subscribe(
       (state) => state.stagedChanges,
-      (stagedChanges) => {
-        if (stagedChanges) {
-          console.log("stagedChanges updated", stagedChanges);
-          updateDOMSaveIndicator(this.saveIndicator);
-        }
-      },
+      () => updateDOMSaveIndicator(this.saveIndicator),
     );
 
-    // Subscribe to notebook updates
     useNotebookStore.subscribe(
       (state) => state.notebook,
-      (notebook) => {
-        if (notebook) {
-          console.log("notebook updated", notebook);
-          this.render(notebook);
-        }
-      },
+      (notebook) => notebook && this.render(notebook),
     );
   }
 
@@ -59,6 +46,11 @@ class Notebook {
       }
       const data = await response.json();
       useNotebookStore.getState().setKernelId(data.kernel_id);
+
+      const kernelIdElement = document.getElementById("kernel-id");
+      if (kernelIdElement) {
+        kernelIdElement.textContent = `Kernel ID: ${data.kernel_id}`;
+      }
     } catch (error) {
       console.error("Error starting kernel:", error);
     }
@@ -104,5 +96,3 @@ class Notebook {
     updateDOMTextareaAutoResize();
   }
 }
-
-export { Notebook };

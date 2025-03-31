@@ -28,7 +28,7 @@ export function renderNotebook(
     <div class="notebook">
       ${notebookData.cells.map((cell: NotebookCell) => renderCell(cell)).join("")}
     </div>
-    <div class="add-cell-buttons">
+    <div class="notebook-add-cell-buttons">
       <button class="new-code-cell-btn">+ Code</button>
       <button class="new-markdown-cell-btn">+ Markdown</button>
     </div>
@@ -101,7 +101,7 @@ function renderCell(cell: NotebookCell): string {
             <div class="input-area hidden">
               <textarea class="input-code">${sourceContent}</textarea>
             </div>
-			<div class="rendered-markdown">${sourceContent.trim() ? notebookxMarkdownRender(sourceContent) : "<h3>(empty markdown cell)</h3>"}</div>
+			<div class="rendered-markdown">${sourceContent.trim() ? notebookxMarkdownRender(sourceContent) : "(empty markdown cell)"}</div>
           </div>
         </div>
         ${commonButtons}

@@ -1,4 +1,5 @@
 import { setupShortcuts } from "./shortcuts";
+import { useNotebookStore } from "@/store";
 import {
   runCodeCell,
   deleteCell,
@@ -7,8 +8,6 @@ import {
   duplicateCell,
   toggleMarkdownEdit,
   saveNotebook,
-  undoAction,
-  resetNotebook,
   createCell,
 } from "@/notebook/actions";
 
@@ -18,6 +17,29 @@ export function setupEventListeners() {
   setupCellToolbarActions();
   setupMarkdownDoubleClick();
   setupShortcuts();
+  navigationEventListners();
+}
+
+function navigationEventListners() {
+  const hasUnsavedChanges = () =>
+    JSON.stringify(useNotebookStore.getState().notebook) !==
+    JSON.stringify(useNotebookStore.getState().stagedChanges);
+
+  const confirmNavigation = (event?: Event) => {
+    if (!hasUnsavedChanges()) return;
+    event?.preventDefault();
+    return confirm("You have unsaved changes. Are you sure you want to leave?");
+  };
+
+  window.addEventListener(
+    "beforeunload",
+    (event) => confirmNavigation(event) && (event.returnValue = ""),
+  );
+  window.addEventListener(
+    "popstate",
+    (event) =>
+      !confirmNavigation(event) && history.pushState(null, "", location.href),
+  );
 }
 
 function setupCellHoverEffects() {
@@ -41,8 +63,6 @@ function setupCellHoverEffects() {
 function setupGlobalButtonActions() {
   const buttonActions: { [key: string]: () => void } = {
     "save-button": saveNotebook,
-    "undo-button": undoAction,
-    "reset-button": resetNotebook,
     "new-code-cell-btn": () => createCell("code"),
     "new-markdown-cell-btn": () => createCell("markdown"),
   };
