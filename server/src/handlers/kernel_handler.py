@@ -7,11 +7,25 @@ import queue
 class KernelHandler(tornado.web.RequestHandler):
     def initialize(self):
         self.kernel_manager = self.application.settings["kernel_manager"]
+        self.kernel_registry = self.application.settings["kernel_registry"]
 
     def get(self):
-        """Start a new kernel and return its ID and status."""
-        kernel_id = self.kernel_manager.start_kernel()
-        self.write({"kernel_id": kernel_id, "status": "running"})
+        """Check for existing kernel, otherwise start a new one."""
+        notebook_path = self.get_argument("notebook_path", None)
+        if not notebook_path:
+            self.set_status(400)
+            self.write({"error": "Missing notebook_path"})
+            return
+
+        if notebook_path in self.kernel_registry:
+            kernel_id = self.kernel_registry[notebook_path]
+        else:
+            kernel_id = self.kernel_manager.start_kernel()
+            self.kernel_registry[notebook_path] = kernel_id
+
+        self.write(
+            {"kernel_id": kernel_id, "status": "running", "notebook": notebook_path}
+        )
 
     def post(self):
         """Execute code on the specified kernel and return formatted outputs."""
@@ -103,16 +117,24 @@ class KernelHandler(tornado.web.RequestHandler):
             )
 
     def delete(self):
-        """Shut down the specified kernel."""
-        kernel_id = self.get_argument("kernel_id", None)
-        if not kernel_id:
+        """Shut down the kernel and remove from registry."""
+        notebook_path = self.get_argument("notebook_path", None)
+        if not notebook_path or notebook_path not in self.kernel_registry:
             self.set_status(400)
-            self.write({"error": "Missing kernel_id"})
+            self.write({"error": "Invalid notebook_path"})
             return
 
+        kernel_id = self.kernel_registry.pop(notebook_path)
         success = self.kernel_manager.shutdown_kernel(kernel_id)
+
         if success:
-            self.write({"status": "Kernel shut down successfully"})
+            self.write(
+                {
+                    "status": "Kernel shut down successfully",
+                    "kernel_id": kernel_id,
+                    "notebook_path": notebook_path,
+                }
+            )
         else:
             self.set_status(404)
             self.write({"error": "Kernel not found"})

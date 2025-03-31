@@ -17,6 +17,7 @@ from server.src.handlers.notebook_handler import (
 )
 from server.src.handlers.kernel_handler import KernelHandler
 from server.src.handlers.packages_handler import PackagesHandler
+from server.src.managers.kernel_manager import KernelManager
 
 
 class NotFoundHandler(tornado.web.RequestHandler):
@@ -38,6 +39,8 @@ def make_app():
         "template_path": os.path.join(base_dir, "../templates"),
         "static_path": os.path.join(base_dir, "../../frontend/dist"),
         "debug": True,
+        "kernel_manager": KernelManager(),
+        "kernel_registry": {},
     }
 
     return tornado.web.Application(

@@ -3,7 +3,6 @@ import tornado.ioloop
 import asyncio
 import logging
 from server import make_app
-from server.src.managers.kernel_manager import KernelManager
 
 LOG_FILE = "notebookx.log"
 
@@ -42,16 +41,15 @@ def shutdown(loop, kernel_manager):
 
 
 def main():
-    kernel_manager = KernelManager()
-
     app = make_app()
-    app.settings["kernel_manager"] = kernel_manager
     app.listen(8197)
 
     logger.info("\n" + INTRO)
     logger.info("Notebook-X is running at http://localhost:8197")
 
     loop = asyncio.get_event_loop()
+
+    kernel_manager = app.settings["kernel_manager"]
 
     signal.signal(signal.SIGINT, lambda sig, frame: shutdown(loop, kernel_manager))
     signal.signal(signal.SIGTERM, lambda sig, frame: shutdown(loop, kernel_manager))
