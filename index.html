@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>NotebookX Documentation</title>
+        <style>
+            :root {
+                --bg: #282828;
+                --fg: #ebdbb2;
+                --red: #cc241d;
+                --green: #98971a;
+                --yellow: #d79921;
+                --blue: #458588;
+                --purple: #b16286;
+                --aqua: #689d6a;
+                --orange: #d65d0e;
+                --gray: #a89984;
+            }
+
+            body {
+                font-family: monospace;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                line-height: 1.6;
+                background-color: var(--bg);
+                color: var(--fg);
+            }
+
+            h1, h2, h3 {
+                color: var(--yellow);
+            }
+
+            pre {
+                background: var(--gray);
+                color: var(--bg);
+                padding: 10px;
+                border-radius: 5px;
+                overflow-x: auto;
+                cursor: pointer;
+            }
+
+            a {
+                color: var(--blue);
+                text-decoration: none;
+            }
+
+            a:hover {
+                color: var(--aqua);
+            }
+
+            hr {
+                border: 1px solid var(--orange);
+                margin: 40px 0;
+            }
+
+            footer {
+                text-align: center;
+                margin-top: 50px;
+            }
+
+            img {
+                width: 100%;
+                margin: 20px 0;
+                border: 2px solid var(--yellow);
+                border-radius: 5px;
+            }
+
+            ul {
+                list-style-type: square;
+                color: var(--orange);
+            }
+
+            li {
+                margin-bottom: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>NotebookX</h1>
+        <p>
+            <strong>NotebookX</strong> is a Python notebook that lets you run and edit <code>.ipynb</code> files, execute code cells, manage kernels, and collaborate in real-time.
+        </p>
+        <p>
+            It follows the <strong>gruvbox</strong> theme for a clean and aesthetic dark mode experience.
+        </p>
+        <h2>Tech Stack</h2>
+        <ul>
+            <li>
+                <strong>Python</strong>
+            </li>
+            <li>
+                <strong>TypeScript</strong>
+            </li>
+            <li>
+                <strong>Tornado</strong>
+            </li>
+            <li>
+                <strong>ZeroMQ</strong>
+            </li>
+            <li>
+                <strong>WebSockets</strong>
+            </li>
+            <li>
+                <strong>IPython</strong>
+            </li>
+            <li>
+                <strong>Webpack</strong>
+            </li>
+        </ul>
+        <h2>Installation</h2>
+        <p>To install NotebookX, run:</p>
+        <pre><code>pip install notebookx</code></pre>
+        <pre><code>pip3 install notebookx --upgrade</code></pre>
+        <h2>Usage</h2>
+        <p>Start a new NotebookX server with:</p>
+        <pre><code>notebookx</code></pre>
+        <p>
+            Then open your browser and go to <code>http://127.0.0.1:8888/</code>.
+        </p>
+        <img src="/ss.png" alt="NotebookX Interface" />
+        <h3>Options:</h3>
+        <ul>
+            <li>
+                <code>--help</code>: Show help and available commands.
+            </li>
+        </ul>
+        <h2>Features</h2>
+        <ul>
+            <li>tbh, nothing different from jupyter as of now.</li>
+        </ul>
+        <h2>License</h2>
+        <p>
+            This project is licensed under the terms of the 3-Clause BSD License (also known as New or Revised or Modified BSD License, or the BSD-3-Clause license)
+        </p>
+        <hr />
+        <footer>
+            <p>
+                Made by
+                <a href="https://adimail.github.io" target="_blank">Aditya Godse</a>
+            </p>
+            <p>
+                <a href="https://github.com/adimail/Notebook-X" target="_blank">Source Code</a>
+                |
+                <a href="https://pypi.org/project/notebookx/" target="_blank">PyPI Page</a>
+            </p>
+        </footer>
+    </body>
+</html>
