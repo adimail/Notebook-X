@@ -2,7 +2,7 @@ import { setupEventListeners } from "./events";
 import { Notebook as RenderedNotebookData } from "@/types";
 import { renderNotebook } from "@/notebook/render";
 import { EditorView } from "codemirror";
-import { fetchNotebook } from "@/utils/api";
+import { fetchNotebook, initializeWebSocket } from "@/utils/api";
 import { useNotebookStore } from "@/store";
 import {
   updateDOMTextareaAutoResize,
@@ -18,6 +18,13 @@ export class Notebook {
     setupEventListeners();
     this.editorContainer = document.getElementById("editor-container");
     this.saveIndicator = document.getElementById("save-indicator");
+
+    try {
+      initializeWebSocket();
+    } catch (error) {
+      console.error("Failed to initialize WebSocket connection:", error);
+    }
+
     this.startKernel();
 
     useNotebookStore.subscribe(
@@ -33,7 +40,6 @@ export class Notebook {
 
   async startKernel() {
     const path = window.location.pathname.replace("/notebook/", "");
-
     try {
       const response = await fetch(
         `/api/kernel?notebook_path=${encodeURIComponent(path)}`,
@@ -46,7 +52,6 @@ export class Notebook {
       }
       const data = await response.json();
       useNotebookStore.getState().setKernelId(data.kernel_id);
-
       const kernelIdElement = document.getElementById("kernel-id");
       if (kernelIdElement) {
         kernelIdElement.textContent = `Kernel ID: ${data.kernel_id}`;
@@ -58,7 +63,6 @@ export class Notebook {
 
   async shutdownKernel() {
     const path = window.location.pathname.replace("/notebook/", "");
-
     try {
       const response = await fetch(
         `/api/kernel?notebook_path=${encodeURIComponent(path)}`,
@@ -79,7 +83,6 @@ export class Notebook {
     const path: string = window.location.pathname.replace("/notebook/", "");
     try {
       const notebookData: RenderedNotebookData = await fetchNotebook(path);
-
       useNotebookStore.getState().setNotebook(notebookData);
     } catch (error) {
       console.error("Error loading notebook:", error);
@@ -88,11 +91,8 @@ export class Notebook {
 
   render(notebookData: RenderedNotebookData) {
     if (!this.editorContainer) return;
-
     renderNotebook(notebookData, this.editorContainer, this.editors);
-
     updateDOMSaveIndicator(this.saveIndicator);
-
     updateDOMTextareaAutoResize();
   }
 }
