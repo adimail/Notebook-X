@@ -3,80 +3,62 @@ import { NotebookCell } from "@/types";
 import { generateCellId } from "@/utils";
 
 export function deleteCell(cellId: string): void {
-  const store = useNotebookStore.getState();
-  store.deleteCell(cellId);
-  store.saveNotebook();
+  useNotebookStore.getState().deleteCell(cellId);
+  useNotebookStore.getState().saveNotebook();
 }
 
 export function moveCellUp(cellId: string): boolean {
   const store = useNotebookStore.getState();
-  if (!store.stagedChanges) return false;
+  const { stagedChanges } = store;
+  if (!stagedChanges) return false;
 
-  const cells = [...store.stagedChanges.cells];
+  const { cells, nbformat = 4, nbformat_minor = 0 } = stagedChanges;
   const currentIndex = cells.findIndex((cell) => cell.id === cellId);
+  if (currentIndex <= 0) return false;
 
-  if (currentIndex <= 0) return false; // Can't move up if at top or not found
-
-  // Swap with previous cell
   [cells[currentIndex - 1], cells[currentIndex]] = [
     cells[currentIndex],
     cells[currentIndex - 1],
   ];
 
-  store.setNotebook({
-    ...store.stagedChanges,
-    cells,
-  });
-
+  store.setNotebook({ cells, nbformat, nbformat_minor });
   return true;
 }
 
 export function moveCellDown(cellId: string): boolean {
   const store = useNotebookStore.getState();
-  if (!store.stagedChanges) return false;
+  const { stagedChanges } = store;
+  if (!stagedChanges) return false;
 
-  const cells = [...store.stagedChanges.cells];
+  const { cells, nbformat = 4, nbformat_minor = 0 } = stagedChanges;
   const currentIndex = cells.findIndex((cell) => cell.id === cellId);
+  if (currentIndex === -1 || currentIndex === cells.length - 1) return false;
 
-  if (currentIndex === -1 || currentIndex === cells.length - 1) return false; // Can't move down if at bottom or not found
-
-  // Swap with next cell
   [cells[currentIndex], cells[currentIndex + 1]] = [
     cells[currentIndex + 1],
     cells[currentIndex],
   ];
 
-  store.setNotebook({
-    ...store.stagedChanges,
-    cells,
-  });
-
+  store.setNotebook({ cells, nbformat, nbformat_minor });
   return true;
 }
 
 export function duplicateCell(cellId: string): string | null {
   const store = useNotebookStore.getState();
-  if (!store.stagedChanges) return null;
+  const cells = store.stagedChanges?.cells;
+  if (!cells) return null;
 
-  const cells = store.stagedChanges.cells;
   const cellIndex = cells.findIndex((cell) => cell.id === cellId);
-
   if (cellIndex === -1) return null;
 
-  const originalCell = cells[cellIndex];
-  const newCell: NotebookCell = {
-    ...originalCell,
-    id: generateCellId(),
-    metadata: { ...originalCell.metadata },
-    source: originalCell.source,
-  };
+  const newCell = structuredClone(cells[cellIndex]);
+  newCell.id = generateCellId();
 
   store.addCell(newCell, cellIndex + 1);
   return newCell.id;
 }
 
 export function createCell(type: "code" | "markdown", index?: number): string {
-  const store = useNotebookStore.getState();
   const newCell: NotebookCell = {
     id: generateCellId(),
     cell_type: type,
@@ -85,19 +67,14 @@ export function createCell(type: "code" | "markdown", index?: number): string {
     ...(type === "code" && { outputs: [], execution_count: null }),
   };
 
-  console.log(newCell.id, "Cell created");
-
-  store.addCell(newCell, index);
-
+  useNotebookStore.getState().addCell(newCell, index);
   return newCell.id;
 }
 
-// Utility type to ensure type safety in store updates
 type CellUpdatePayload = Partial<
   Pick<NotebookCell, "source" | "metadata" | "outputs">
 >;
 
 export function updateCell(cellId: string, update: CellUpdatePayload): void {
-  const store = useNotebookStore.getState();
-  store.updateCell(cellId, update);
+  useNotebookStore.getState().updateCell(cellId, update);
 }

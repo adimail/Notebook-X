@@ -1,19 +1,6 @@
 import { CodeCell } from "@/cells/code";
 
 export function runCodeCell(cellId: string) {
-  const allCells = document.querySelectorAll(".cell-container");
-  let cellElement: HTMLElement | null = null;
-
-  allCells.forEach((cell) => {
-    if (cell.id === `${cellId}`) {
-      cellElement = cell as HTMLElement;
-    }
-  });
-
-  if (!cellElement) {
-    console.error("Cell not found for ID:", cellId);
-    return;
-  }
-
-  new CodeCell(cellElement).execute();
+  const cellElement = document.getElementById(cellId);
+  if (cellElement) new CodeCell(cellElement).execute();
 }

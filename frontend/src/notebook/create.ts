@@ -1,12 +1,8 @@
-/**
- * Creates a new notebook by prompting the user for a name and making an API request.
- * @param currentPath - The current directory path where the notebook will be created.
- */
 export async function createNotebook(currentPath: string) {
-  let notebookName = prompt("Enter the name of the new notebook:");
+  const notebookName =
+    prompt("Enter the name of the new notebook")?.replace(/\.ipynb$/i, "") +
+    ".ipynb";
   if (!notebookName) return;
-
-  notebookName = notebookName.replace(/\.ipynb$/i, "") + ".ipynb";
 
   const notebookPath = currentPath
     ? `${currentPath}/${notebookName}`
@@ -15,19 +11,22 @@ export async function createNotebook(currentPath: string) {
   try {
     const response = await fetch(
       `/api/notebook/create?path=${encodeURIComponent(notebookPath)}`,
-      {
-        method: "POST",
-      },
+      { method: "POST" },
     );
 
-    if (response.ok) {
-      location.reload();
-    } else {
-      const error = await response.json();
-      alert(`Error: ${error.message || "Failed to create notebook"}`);
+    if (!response.ok) {
+      throw new Error(
+        (await response.json()).message || "Failed to create notebook",
+      );
     }
+
+    location.reload();
   } catch (error) {
     console.error("Failed to create notebook:", error);
-    alert("Failed to create notebook. Please try again.");
+    alert(
+      error instanceof Error
+        ? error.message
+        : "Failed to create notebook. Please try again.",
+    );
   }
 }

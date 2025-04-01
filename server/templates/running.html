@@ -15,7 +15,9 @@
         <tbody>
             {% for kernel in running_kernels %}
                 <tr>
-                    <td>{{ kernel["notebook_name"] }}</td>
+                    <td>
+                        <a href="/notebook/{{ kernel["notebook_name"] }}">{{ kernel["notebook_name"] }}</a>
+                    </td>
                     <td>{{ kernel["kernel_id"] }}</td>
                     <td>
                         <button class="delete-kernel-btn"

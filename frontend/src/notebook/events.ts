@@ -17,10 +17,10 @@ export function setupEventListeners() {
   setupCellToolbarActions();
   setupMarkdownDoubleClick();
   setupShortcuts();
-  navigationEventListners();
+  setupNavigationListeners();
 }
 
-function navigationEventListners() {
+function setupNavigationListeners() {
   const hasUnsavedChanges = () =>
     JSON.stringify(useNotebookStore.getState().notebook) !==
     JSON.stringify(useNotebookStore.getState().stagedChanges);
@@ -43,50 +43,35 @@ function navigationEventListners() {
 }
 
 function setupCellHoverEffects() {
-  document.body.addEventListener("mouseover", (event) => {
-    const cell = (event.target as HTMLElement).closest(".cell-container");
-    if (!cell) return;
-
-    const toolbar = cell.querySelector(".cell-toolbar") as HTMLElement | null;
-    if (toolbar) toolbar.style.opacity = "1";
-  });
-
-  document.body.addEventListener("mouseout", (event) => {
-    const cell = (event.target as HTMLElement).closest(".cell-container");
-    if (!cell) return;
-
-    const toolbar = cell.querySelector(".cell-toolbar") as HTMLElement | null;
-    if (toolbar) toolbar.style.opacity = "0";
-  });
+  document.body.addEventListener("mouseover", toggleCellToolbarOpacity(1));
+  document.body.addEventListener("mouseout", toggleCellToolbarOpacity(0));
 }
 
+const toggleCellToolbarOpacity = (opacity: number) => (event: Event) => {
+  const toolbar = (event.target as HTMLElement)
+    .closest(".cell-container")
+    ?.querySelector(".cell-toolbar") as HTMLElement;
+  if (toolbar) toolbar.style.opacity = opacity.toString();
+};
+
 function setupGlobalButtonActions() {
-  const buttonActions: { [key: string]: () => void } = {
+  Object.entries({
     "save-button": saveNotebook,
     "new-code-cell-btn": () => createCell("code"),
     "new-markdown-cell-btn": () => createCell("markdown"),
-  };
-
-  Object.entries(buttonActions).forEach(([id, handler]) => {
-    document.getElementById(id)?.addEventListener("click", handler);
-  });
+  }).forEach(([id, handler]) =>
+    document.getElementById(id)?.addEventListener("click", handler),
+  );
 }
 
 function setupCellToolbarActions() {
   document.body.addEventListener("click", (event) => {
     const target = event.target as HTMLElement;
-
-    let cell = target.parentElement;
-    while (cell && !cell.classList.contains("cell-container")) {
-      cell = cell.parentElement;
-    }
-
-    if (!cell) return;
-
-    const cellId = cell.id;
+    const cell = target.closest(".cell-container");
+    const cellId = cell?.id;
     if (!cellId) return;
 
-    const actions: { [key: string]: (cellId: string) => void } = {
+    const actions: Record<string, (cellId: string) => void> = {
       "run-btn": runCodeCell,
       "delete-btn": deleteCell,
       "move-up-btn": moveCellUp,
@@ -95,36 +80,16 @@ function setupCellToolbarActions() {
       "edit-markdown-btn": toggleMarkdownEdit,
     };
 
-    for (const [selector, action] of Object.entries(actions)) {
-      if (target.matches(`.${selector}`)) {
-        action(cellId);
-        break;
-      }
-    }
+    const action = Object.entries(actions).find(([selector]) =>
+      target.matches(`.${selector}`),
+    )?.[1];
+    if (action) action(cellId);
   });
 }
 
 function setupMarkdownDoubleClick() {
   document.body.addEventListener("dblclick", (event) => {
-    const target = event.target as HTMLElement;
-
-    let markdownContainer = target.parentElement;
-    while (
-      markdownContainer &&
-      !markdownContainer.classList.contains("rendered-markdown")
-    ) {
-      markdownContainer = markdownContainer.parentElement;
-    }
-
-    if (!markdownContainer) return;
-
-    let cell = markdownContainer.parentElement;
-    while (cell && !cell.classList.contains("cell-container")) {
-      cell = cell.parentElement;
-    }
-
-    if (cell && cell.id) {
-      toggleMarkdownEdit(cell.id);
-    }
+    const cell = (event.target as HTMLElement).closest(".cell-container");
+    if (cell?.id) toggleMarkdownEdit(cell.id);
   });
 }

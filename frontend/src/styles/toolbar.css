@@ -1,7 +1,7 @@
 #toolbar {
-  background-color: var(--toolbar-bg);
-  padding: 5px;
-  border-bottom: 2px solid var(--border-color);
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;

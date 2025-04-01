@@ -25,6 +25,14 @@ footer a {
 
 main {
   margin-bottom: 50px;
+  max-width: 1000px;
+  margin: auto;
+  padding: 10px;
+}
+
+header {
+  background-color: var(--toolbar-bg);
+  padding: 10px;
 }
 
 .hidden {
@@ -48,6 +56,10 @@ hr {
   border: 1px solid #ddd;
   text-align: left;
   font-size: 16px;
+  color: #e5e5e5;
+}
+
+#utility-tables td a {
   color: #e5e5e5;
 }
 

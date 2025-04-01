@@ -1,8 +1,7 @@
 import { DirectoryItem } from "@/types";
 
 export function getQueryParam(param: string): string {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(param) || "";
+  return new URLSearchParams(window.location.search).get(param) || "";
 }
 
 export function renderDirectoryListing(
@@ -11,33 +10,46 @@ export function renderDirectoryListing(
 ) {
   const container = document.getElementById("directory-container");
   if (!container) return;
+
   container.innerHTML = "";
   container.className = "directory-listing";
 
+  const fragment = document.createDocumentFragment();
+
   if (currentPath) {
     const upLink = document.createElement("a");
-    const pathParts = currentPath.split("/").filter(Boolean);
-    pathParts.pop();
-    const upPath = pathParts.join("/");
-    upLink.href = `/?path=${encodeURIComponent(upPath)}`;
+    upLink.href = `/?path=${encodeURIComponent(currentPath.split("/").slice(0, -1).join("/"))}`;
     upLink.textContent = ".. (up)";
     upLink.className = "up-link";
-    container.appendChild(upLink);
-    container.appendChild(document.createElement("br"));
+    fragment.appendChild(upLink);
+    fragment.appendChild(document.createElement("br"));
   }
 
   const table = document.createElement("table");
   table.className = "directory-table";
+  table.appendChild(createTableHeader());
 
+  items.forEach((item) => table.appendChild(createTableRow(item, currentPath)));
+
+  fragment.appendChild(table);
+  container.appendChild(fragment);
+}
+
+function createTableHeader(): HTMLTableRowElement {
   const headerRow = document.createElement("tr");
 
   const selectAllTh = document.createElement("th");
   const selectAllCheckbox = document.createElement("input");
   selectAllCheckbox.type = "checkbox";
   selectAllCheckbox.addEventListener("change", () => {
-    checkboxes.forEach((cb) => (cb.checked = selectAllCheckbox.checked));
+    document
+      .querySelectorAll<HTMLInputElement>('input[type="checkbox"]')
+      .forEach((cb) => {
+        cb.checked = selectAllCheckbox.checked;
+      });
     updateDeleteButtonState();
   });
+
   selectAllTh.appendChild(selectAllCheckbox);
   headerRow.appendChild(selectAllTh);
 
@@ -47,76 +59,69 @@ export function renderDirectoryListing(
     headerRow.appendChild(th);
   });
 
-  table.appendChild(headerRow);
+  return headerRow;
+}
 
-  const checkboxes: HTMLInputElement[] = [];
+function createTableRow(
+  item: DirectoryItem,
+  currentPath: string,
+): HTMLTableRowElement {
+  const row = document.createElement("tr");
 
-  items.forEach((item) => {
-    const row = document.createElement("tr");
+  const checkboxCell = document.createElement("td");
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.dataset.filepath = currentPath
+    ? `${currentPath}/${item.name}`
+    : item.name;
+  checkbox.addEventListener("change", updateDeleteButtonState);
+  checkboxCell.appendChild(checkbox);
+  row.appendChild(checkboxCell);
 
-    const checkboxCell = document.createElement("td");
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.dataset.filepath = currentPath
-      ? `${currentPath}/${item.name}`
-      : item.name;
-    checkbox.addEventListener("change", updateDeleteButtonState);
-    checkboxes.push(checkbox);
-    checkboxCell.appendChild(checkbox);
-    row.appendChild(checkboxCell);
+  const nameCell = document.createElement("td");
+  const itemLink = document.createElement("a");
 
-    const nameCell = document.createElement("td");
-    const itemLink = document.createElement("a");
+  if (item.isDir) {
+    itemLink.href = `/?path=${encodeURIComponent(currentPath ? `${currentPath}/${item.name}` : item.name)}`;
+    itemLink.textContent = `[DIR] ${item.name}`;
+    itemLink.className = "dir-link";
+  } else {
+    itemLink.href = `/open/${encodeURIComponent(currentPath ? `${currentPath}/${item.name}` : item.name)}`;
+    itemLink.textContent = item.name;
+    itemLink.className = item.name.endsWith(".ipynb")
+      ? "notebook-link"
+      : "file-link";
+  }
 
-    if (item.isDir) {
-      const newPath = currentPath ? `${currentPath}/${item.name}` : item.name;
-      itemLink.href = `/?path=${encodeURIComponent(newPath)}`;
-      itemLink.textContent = `[DIR] ${item.name}`;
-      itemLink.className = "dir-link";
-    } else {
-      const filePath = currentPath ? `${currentPath}/${item.name}` : item.name;
-      itemLink.href = `/open/${encodeURIComponent(filePath)}`;
-      itemLink.textContent = item.name;
+  nameCell.appendChild(itemLink);
+  row.appendChild(nameCell);
 
-      if (item.name.endsWith(".ipynb")) {
-        itemLink.className = "notebook-link";
-      } else {
-        itemLink.className = "file-link";
-      }
-    }
+  const typeCell = document.createElement("td");
+  typeCell.textContent = item.type || "unknown";
+  row.appendChild(typeCell);
 
-    nameCell.appendChild(itemLink);
-    row.appendChild(nameCell);
+  const sizeCell = document.createElement("td");
+  sizeCell.textContent = item.size ? (item.size / 1024).toFixed(2) : "-";
+  row.appendChild(sizeCell);
 
-    const typeCell = document.createElement("td");
-    typeCell.textContent = item.type || "unknown";
-    row.appendChild(typeCell);
+  const dateCell = document.createElement("td");
+  dateCell.textContent = item.lastModified
+    ? new Date(item.lastModified * 1000).toLocaleString()
+    : "-";
+  row.appendChild(dateCell);
 
-    const sizeCell = document.createElement("td");
-    sizeCell.textContent = item.size ? (item.size / 1024).toFixed(2) : "-";
-    row.appendChild(sizeCell);
-
-    const dateCell = document.createElement("td");
-    const lastModified = item.lastModified
-      ? new Date(item.lastModified * 1000).toLocaleString()
-      : "-";
-    dateCell.textContent = lastModified;
-    row.appendChild(dateCell);
-
-    table.appendChild(row);
-  });
-
-  container.appendChild(table);
+  return row;
 }
 
 function updateDeleteButtonState() {
   const deleteButton = document.getElementById(
     "delete-button",
-  ) as HTMLButtonElement;
-  const selectedFiles = document.querySelectorAll(
-    'input[type="checkbox"]:checked',
-  );
-  deleteButton.disabled = selectedFiles.length === 0;
+  ) as HTMLButtonElement | null;
+  if (deleteButton) {
+    deleteButton.disabled = !document.querySelector(
+      'input[type="checkbox"]:checked',
+    );
+  }
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -134,8 +139,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const deleteButton = document.getElementById(
     "delete-button",
-  ) as HTMLButtonElement;
+  ) as HTMLButtonElement | null;
   if (!deleteButton) return;
+
   deleteButton.addEventListener("click", async () => {
     const selectedFiles = Array.from(
       document.querySelectorAll<HTMLInputElement>(
@@ -143,12 +149,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       ),
     ).map((cb) => cb.dataset.filepath as string);
 
-    if (selectedFiles.length === 0) return;
-
-    const confirmed = confirm(
-      `Are you sure you want to delete ${selectedFiles.length} files?`,
-    );
-    if (!confirmed) return;
+    if (
+      !selectedFiles.length ||
+      !confirm(`Are you sure you want to delete ${selectedFiles.length} files?`)
+    )
+      return;
 
     try {
       const response = await fetch("/api/delete_files", {
