@@ -19,12 +19,6 @@ Getting Started:
   2. Open http://localhost:8197 in your browser.
   3. Create a new notebook and add code cells to execute Python commands.
 
-Shortcuts:
-  - Shift + Enter: Execute the current cell.
-  - Ctrl + Enter: Execute the current cell and keep it selected.
-  - Esc + M: Convert a code cell to a Markdown cell.
-  - Esc + Y: Convert a Markdown cell to a code cell.
-
 For more details, visit: https://adimail.github.io/notebook-x
     """
     print(help_text)
