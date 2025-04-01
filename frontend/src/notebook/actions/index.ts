@@ -7,4 +7,4 @@ export {
   moveCellUp,
   createCell,
 } from "./cell-actions";
-export { saveNotebook } from "./notebook-actions";
+export { saveNotebook, runAllCells } from "./notebook-actions";

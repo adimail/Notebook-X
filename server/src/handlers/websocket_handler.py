@@ -1,11 +1,13 @@
 import tornado.websocket
+from server.logger import logger
 import json
 import queue
+import traceback
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
-        print("WebSocket connection opened")
+        logger.info(f"WebSocket connection opened: {self.request.remote_ip}")
 
     def on_message(self, message):
         """Handle incoming message and send back execution results."""
@@ -15,12 +17,19 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
                 kernel_id = message_data["kernel_id"]
                 code = message_data["code"]
                 request_id = message_data.get("requestId", "default")
+                logger.info(
+                    f"Executing code on kernel {kernel_id} | Request ID: {request_id}"
+                )
                 self.execute_code(kernel_id, code, request_id)
+        except json.JSONDecodeError:
+            logger.error(f"Invalid JSON received: {message}")
+            self.write_message(json.dumps({"error": "Invalid JSON"}))
         except Exception as e:
+            logger.exception("Error processing message")
             self.write_message(json.dumps({"error": str(e)}))
 
     def on_close(self):
-        print("WebSocket connection closed")
+        logger.info(f"WebSocket connection closed: {self.request.remote_ip}")
 
     def check_origin(self, origin):
         """Allow connections from any origin in debug mode."""
@@ -33,6 +42,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
                 kernel_id
             )
             if not km:
+                logger.warning(f"Kernel {kernel_id} not found")
                 self.write_message(
                     json.dumps({"error": "Kernel not found", "requestId": request_id})
                 )
@@ -44,6 +54,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
             reply = client.get_shell_msg(timeout=30)
             if reply["parent_header"]["msg_id"] != msg_id:
+                logger.warning(f"Message ID mismatch for request {request_id}")
                 self.write_message(
                     json.dumps(
                         {"error": "Mismatched message ID", "requestId": request_id}
@@ -55,8 +66,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             execution_count = (
                 reply["content"]["execution_count"] if status == "ok" else None
             )
-
             outputs = []
+
             while True:
                 try:
                     msg = client.get_iopub_msg(timeout=0.1)
@@ -92,6 +103,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
                 except queue.Empty:
                     continue
 
+            logger.info(f"Execution completed | Kernel: {kernel_id}, Status: {status}")
+
             self.write_message(
                 json.dumps(
                     {
@@ -102,4 +115,19 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
                 )
             )
         except Exception as e:
-            self.write_message(json.dumps({"error": str(e), "requestId": request_id}))
+            logger.exception(
+                f"Error during execution | Kernel: {kernel_id}, Request ID: {request_id}"
+            )
+            self.write_message(
+                json.dumps(
+                    {
+                        "error": {
+                            "ename": type(e).__name__,
+                            "evalue": str(e),
+                            "traceback": traceback.format_exception(
+                                type(e), e, e.__traceback__
+                            ),
+                        }
+                    }
+                )
+            )

@@ -1,8 +1,11 @@
 export async function createNotebook(currentPath: string) {
-  const notebookName =
-    prompt("Enter the name of the new notebook")?.replace(/\.ipynb$/i, "") +
-    ".ipynb";
+  let notebookName = prompt("Enter the name of the new notebook")?.trim();
   if (!notebookName) return;
+
+  notebookName = notebookName
+    .replace(/[^a-zA-Z0-9 ]/g, "")
+    .replace(/\s+/g, "_");
+  notebookName += ".ipynb";
 
   const notebookPath = currentPath
     ? `${currentPath}/${notebookName}`

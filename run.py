@@ -4,68 +4,15 @@ import tornado.ioloop
 import asyncio
 import logging
 from server import make_app
-
-LOG_FILE = "notebookx.log"
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    handlers=[
-        logging.FileHandler(LOG_FILE, mode="w"),
-        logging.StreamHandler(),
-    ],
-)
-
-logger = logging.getLogger(__name__)
-
-INTRO = """
-  _   _    ___    _____   _____   ____     ___     ___    _  __   __  __
- | \ | |  / _ \  |_   _| | ____| | __ )   / _ \   / _ \  | |/ /   \ \/ /
- |  \| | | | | |   | |   |  _|   |  _ \  | | | | | | | | | ' /     \  /
- | |\  | | |_| |   | |   | |___  | |_) | | |_| | | |_| | | . \     /  \\
- |_| \_|  \___/    |_|   |_____| |____/   \___/   \___/  |_|\_\   /_/\_\\
-
-"""
-
-
-def print_help():
-    """Prints usage information for Notebook-X."""
-    help_text = """
-Notebook-X: A lightweight Python notebook.
-
-Usage:
-  notebookx [options]
-
-Options:
-  --help, -h      Show this help message and exit.
-
-About Notebook-X:
-  - Notebook-X is a Jupyter Notebook clone that allows you to write and execute Python code in interactive cells.
-  - It provides a browser-based interface with support for Markdown, code execution, and kernel management.
-  - Use Notebook-X for data analysis, visualization, and computational experiments.
-
-Getting Started:
-  1. Start the server: Run `notebookx` in your terminal.
-  2. Open http://localhost:8197 in your browser.
-  3. Create a new notebook and add code cells to execute Python commands.
-
-Shortcuts:
-  - Shift + Enter: Execute the current cell.
-  - Ctrl + Enter: Execute the current cell and keep it selected.
-  - Esc + M: Convert a code cell to a Markdown cell.
-  - Esc + Y: Convert a Markdown cell to a code cell.
-
-For more details, visit: https://adimail.github.io/notebook-x
-    """
-    print(help_text)
+from server.src.utils.help import print_help, INTRO
+from server.logger import logger
 
 
 def parse_arguments():
     """Parses command-line arguments."""
     parser = argparse.ArgumentParser(
         description="Notebook-X: A lightweight Python notebook.",
-        add_help=False,  # Disable default help message to use our custom function
+        add_help=False,
     )
     parser.add_argument(
         "--help", "-h", action="store_true", help="Show this help message and exit."

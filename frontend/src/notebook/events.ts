@@ -9,6 +9,7 @@ import {
   toggleMarkdownEdit,
   saveNotebook,
   createCell,
+  runAllCells,
 } from "@/notebook/actions";
 
 export function setupEventListeners() {
@@ -59,6 +60,7 @@ function setupGlobalButtonActions() {
     "save-button": saveNotebook,
     "new-code-cell-btn": () => createCell("code"),
     "new-markdown-cell-btn": () => createCell("markdown"),
+    "run-all-cells": runAllCells,
   }).forEach(([id, handler]) =>
     document.getElementById(id)?.addEventListener("click", handler),
   );
