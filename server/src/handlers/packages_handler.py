@@ -1,7 +1,5 @@
-import sys
 import platform
 import pkg_resources
-import tornado.web
 from .base_handler import BaseHandler
 
 
@@ -11,10 +9,8 @@ class PackagesHandler(BaseHandler):
         try:
             python_version = f"Python {platform.python_version()}"
             pip_version = f"pip {pkg_resources.get_distribution('pip').version}"
-            packages = [
-                {"name": dist.key, "version": dist.version}
-                for dist in pkg_resources.working_set
-            ]
+            pkg_set = pkg_resources.working_set
+            packages = [{"name": dist.key, "version": dist.version} for dist in pkg_set]
             packages.sort(key=lambda x: x["name"].lower())
 
             if self.request.path.startswith("/api"):

@@ -1,12 +1,10 @@
 import os
 import json
 import nbformat
-from nbformat import NotebookNode
 import tornado.web
 from server.src.utils.file_utils import get_file_content
 from server.src.utils.excluded_dirs import EXCLUDE_DIRS, FileTypeMappings
 from .base_handler import BaseHandler
-from datetime import datetime
 
 
 class HomeHandler(BaseHandler):

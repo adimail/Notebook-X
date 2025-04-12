@@ -2,7 +2,7 @@ import os
 import json
 import tornado.web
 import nbformat
-from nbformat.v4 import new_notebook, new_code_cell, new_markdown_cell, new_notebook
+from nbformat.v4 import new_notebook, new_notebook
 from .base_handler import BaseHandler
 from datetime import datetime
 

@@ -1,12 +1,10 @@
 import os
-import tornado.ioloop
 import tornado.web
 from server.src.handlers.file_handler import (
     HomeHandler,
     FileHandler,
     APIFilesHandler,
     APIDeleteFilesHandler,
-    APISaveFileHandler,
     APISaveNotebookHandler,
 )
 from server.src.handlers.websocket_handler import WebSocketHandler
@@ -53,13 +51,11 @@ def make_app():
             (r"/api/packages", PackagesHandler),
             (r"/packages", PackagesHandler),
             (r"/running", RunningKernelsHandler),
-            (r"/api/running_kernels", RunningKernelsHandler),
             (r"/ws", WebSocketHandler),
             (r"/api/kernel", KernelHandler),
             (r"/api/notebook/create", CreateNotebookHandler),
             (r"/api/load_notebook", LoadNotebookHandler),
             (r"/api/delete_files", APIDeleteFilesHandler, dict(base_dir=base_dir)),
-            (r"/api/save_file", APISaveFileHandler, dict(base_dir=base_dir)),
             (r"/api/save-notebook", APISaveNotebookHandler),
             (
                 r"/static/(.*)",
